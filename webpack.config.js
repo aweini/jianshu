@@ -21,16 +21,10 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                include: [
-                    path.resolve(__dirname, './src')
-                ],
                 loader: 'babel-loader'
             },
             {
                 test: /\.css$/,
-                include: [
-                    path.resolve(__dirname, './src')
-                ],
                 use: ['style-loader','css-loader']
             },
             {
@@ -39,7 +33,7 @@ module.exports = {
                     path.resolve(__dirname, './src')
                 ],
                 use:[
-                    {loader: 'sass-loader'},
+                    {loader: 'style-loader'},
                     {
                         loader: 'css-loader',
                         options:{
@@ -82,7 +76,8 @@ module.exports = {
         modules: [
             'node_modules',
             path.resolve(__dirname,'/src/common'),
-            path.resolve(__dirname,'/src/components')
+            path.resolve(__dirname,'/src/components'),
+            path.resolve(__dirname,'/src/layout')
         ]
     },
     plugins:[
