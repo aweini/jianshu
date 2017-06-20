@@ -1,29 +1,19 @@
 /**
  * Created by mahong on 17/6/19.
  */
-import React from 'react';
+import {Route} from 'react-router-dom';
 import Nav from '../nav/Nav';
-import cfg from '../../common/config/config.json';
+import Home from 'view/home/Home.js';
+
+
 
 export default class Frame extends React.Component{
-    componentDidMount(){
-        //$.post(`${cfg.url}/getPreview`)
-        //.done(res=>{
-        //
-        //})
-        $.ajax({
-            url:`${cfg.url}/getPreview`,
-            type: 'post',
-            dataType:"json"
-        })
-        .done(res=>{
 
-        })
-    }
     render(){
         return (
             <div>
                 <Nav/>
+                <Route exact path="/" component={Home}></Route>
             </div>
             )
     }
