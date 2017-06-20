@@ -3,7 +3,7 @@
  */
 import {Route} from 'react-router-dom';
 import Nav from '../nav/Nav';
-import Home from 'view/home/Home.js';
+import Home from 'home/Home.js';
 
 
 

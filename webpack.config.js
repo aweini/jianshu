@@ -75,9 +75,10 @@ module.exports = {
     resolve:{
         modules: [
             'node_modules',
-            path.resolve(__dirname,'/src/common'),
-            path.resolve(__dirname,'/src/components'),
-            path.resolve(__dirname,'/src/layout')
+            path.resolve(__dirname,'./src/common'),
+            path.resolve(__dirname,'./src/components'),
+            path.resolve(__dirname,'./src/layout'),
+            path.resolve(__dirname,'./src/view')
         ]
     },
     plugins:[
