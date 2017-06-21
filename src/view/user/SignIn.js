@@ -12,9 +12,10 @@ export default class SignIn extends React.Component{
         super(props);
     }
     render(){
+        let {signInAjax, signInMsg} = this.props;
         return (
             <Panel>
-                <SignInPanel></SignInPanel>
+                <SignInPanel {...{signInAjax, signInMsg}}></SignInPanel>
             </Panel>
         )
     }

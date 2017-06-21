@@ -26,6 +26,7 @@ export default class SignInPanel extends React.Component{
 
         this.nameChange = this.nameChange.bind(this);
         this.passwordChange = this.passwordChange.bind(this);
+        this.submitLogin = this.submitLogin.bind(this);
     }
     nameChange(ev){
         let {target} = ev;
@@ -43,9 +44,31 @@ export default class SignInPanel extends React.Component{
             passwordErr: msg
         })
     }
+
+    submitLogin(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        let {nameDom, passwordDom} = this.refs;
+        let {signInAjax} = this.props;
+        let nameErr = this.validator.valiOneByValue('username', nameDom.value);
+        let passwordErr = this.validator.valiOneByValue('password', passwordDom.value);
+         this.setState({
+                nameErr,
+                passwordErr
+            })
+        if(nameErr!==''&&passwordErr!==''){
+            signInAjax({
+                username:nameDom.value,
+                password:passwordDom.value
+            })
+        }
+        
+
+    }
+
     render(){
 
-        let {nameChange, passwordChange} = this;
+        let {nameChange, passwordChange, submitLogin} = this;
         let {username, password, nameErr, passwordErr} = this.state;
         let nameErrMsg = nameErr?(
             <p className={S.err}>{nameErr}</p>
@@ -55,8 +78,19 @@ export default class SignInPanel extends React.Component{
             <p className={S.err}>{passwordErr}</p>
         ):null;
 
+        let {signInMsg} = this.props;
+        let resInfo = null;
+        if(signInMsg&&signInMsg!=0){
+            resInfo = (
+                <div className="ui message error"> 
+                    <p>{signInMsg.msg}</p>
+                </div>
+            )
+        }
+
         return(
             <div className={S.sign_panel}>
+                {resInfo}
                 <form className="ui form">
                     <div className={`field ${nameErr?'error':''}`}>
                         <input 
@@ -79,7 +113,7 @@ export default class SignInPanel extends React.Component{
                         {passwordErrMsg}
                     </div>
                     <div className="field">
-                        <button type="submit" className="ui button fluid primary">
+                        <button type="submit" className="ui button fluid primary" onClick={submitLogin}>
                             登录
                         </button>
                     </div>
