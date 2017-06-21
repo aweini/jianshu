@@ -26,6 +26,7 @@ export default function Panel({children}){
                     </div>
                 </h4>
                 {children}
+                {/*当panel确定。里面的东西不确定，可用在其里面的children来改变*/}
             </div>
         </div>
     )

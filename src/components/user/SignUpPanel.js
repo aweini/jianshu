@@ -44,7 +44,11 @@ export default class SignUpPanel extends React.Component{
     }
     passwordChange(ev){
         let {target} = ev;
-        let passwordErr = this.validator.valiOneByValue('password',target.value)
+        let passwordErr = this.validator.valiOneByValue('password',target.value);
+        let {cfPasswordErr} = this.state;
+        if(cfPasswordErr){
+            cfPasswordChange();
+        }
         this.setState({
             password: target.value,
             passwordErr

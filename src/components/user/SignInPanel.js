@@ -50,6 +50,7 @@ export default class SignInPanel extends React.Component{
         ev.stopPropagation();
         let {nameDom, passwordDom} = this.refs;
         let {signInAjax} = this.props;
+        //没有填写过用户名密码，所以要验证
         let nameErr = this.validator.valiOneByValue('username', nameDom.value);
         let passwordErr = this.validator.valiOneByValue('password', passwordDom.value);
          this.setState({
@@ -57,6 +58,7 @@ export default class SignInPanel extends React.Component{
                 passwordErr
             })
         if(nameErr!==''&&passwordErr!==''){
+            //用state里的username 会更快
             signInAjax({
                 username:nameDom.value,
                 password:passwordDom.value

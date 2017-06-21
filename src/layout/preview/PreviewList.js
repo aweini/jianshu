@@ -5,9 +5,11 @@ import S from "./style.scss";
 export default function PreviewList(props){
     let {previews} = props;
     //previews = [];
+    //id: article_id,  id取别名为article_id
     previews = previews.map((el , index)=>{
         let {
-            id: article_id, article_title, createdAt,
+            id: article_id, 
+            article_title, createdAt,
             preview: previewContent,
             collection_name,
             user_id,
@@ -30,6 +32,8 @@ export default function PreviewList(props){
             }}
             key={index}
             >
+
+            
             <Link to="" className={S.tag}>
                 {collection_name}
             </Link>
