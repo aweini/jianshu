@@ -5,10 +5,14 @@ export default class SignUp extends React.Component{
     constructor(props){
         super(props);
     }
+    componentWillUnmount(){
+        this.props.clearTipMsg();
+    }
     render(){
+        let {signUpAjax, signUpMsg} = this.props;
         return (
             <Panel>
-                <SignUpPanel></SignUpPanel>
+                <SignUpPanel {...{signUpAjax, signUpMsg}}></SignUpPanel>
             </Panel>
         )
     }

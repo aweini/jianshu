@@ -82,7 +82,7 @@ export default class SignInPanel extends React.Component{
 
         let {signInMsg} = this.props;
         let resInfo = null;
-        if(signInMsg&&signInMsg!=0){
+        if(signInMsg&&signInMsg.code!=0){
             resInfo = (
                 <div className="ui message error"> 
                     <p>{signInMsg.msg}</p>
