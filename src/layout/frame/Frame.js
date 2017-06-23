@@ -6,6 +6,7 @@ import Nav from '../nav/Nav';
 import Home from 'home/Home.js';
 import SignIn from 'user/SignIn';
 import SignUp from 'user/SignUp';
+import MyPage from 'user/MyPage';
 import cfg from 'config/config.json';
 
 export default class Frame extends React.Component{
@@ -15,13 +16,18 @@ export default class Frame extends React.Component{
             myInfo: null,
             signInMsg: null,
             signUpMsg: null,
-            hasLoginReq: false
+            hasLoginReq: false,
+            myPagePreviews: [],
+            notebooks: [],
+            previewsName: '所有文章'
         }
         this.signInAjax = this.signInAjax.bind(this);
         this.signUpAjax = this.signUpAjax.bind(this);
         this.clearTipMsg = this.clearTipMsg.bind(this);
         this.initMyInfo = this.initMyInfo.bind(this);
         this.logout = this.logout.bind(this);
+        this.getPreviews = this.getPreviews.bind(this);
+        this.initMyPage = this.initMyPage.bind(this);
     }
 
     initMyInfo(myInfo){
@@ -86,9 +92,35 @@ export default class Frame extends React.Component{
         })
     }
 
+    getPreviews(data){
+        $.post(`${cfg.url}/getPreview`, data)
+        .done(({code, data})=>{
+            if(code==0){
+                this.setState({
+                    myPagePreviews: data
+                })
+            }
+        })
+    }
+
+    initMyPage(user_id, previewsData, previewName){
+        this.getPreviews(previewsData);
+        $.post(`${cfg.url}/getCollection`, {
+            user_id
+        })
+        .done((code, data)=>{
+            if(code==0){
+                this.setState({
+                    notebooks: data,
+                    previewName
+                })
+            }
+        })
+    }
+
     render(){
-        let {signInAjax, signUpAjax, clearTipMsg,logout} = this;
-        let {signInMsg, signUpMsg,myInfo,hasLoginReq} = this.state;
+        let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage} = this;
+        let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews} = this.state;
         if(!hasLoginReq){
             return (<div></div>);
         }
@@ -120,6 +152,10 @@ export default class Frame extends React.Component{
                         
                     )
                 }></Route>
+                <Route exact path="/my_page" render={
+                    <MyPage {...{initMyPage, notebooks, previewsName}}></MyPage>
+                }>
+                </Route>
             </div>
             )
     }
