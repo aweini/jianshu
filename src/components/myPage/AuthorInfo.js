@@ -5,7 +5,7 @@ export default function AuthorInfo(){
     return (
         <div className={S.author_info}>
             <Link to="/my_page">
-                <img src="" alt=""/>>
+                <img src="" alt=""/>
             </Link>
             <div className={S.title}>
                 <Link to="/my_page" className={S.name}>

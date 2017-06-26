@@ -3,7 +3,7 @@ import Preview from './Preview';
 import S from "./style.scss";
 
 export default function PreviewList(props){
-    let {previews} = props;
+    let {previews,initMyPage} = props;
     //previews = [];
     //id: article_id,  id取别名为article_id
     previews = previews.map((el , index)=>{
@@ -28,7 +28,8 @@ export default function PreviewList(props){
                 user_name,
                 createdAt,
                 avatar,
-                user_intro
+                user_intro,
+                initMyPage
             }}
             key={index}
             >

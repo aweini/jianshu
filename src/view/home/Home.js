@@ -19,7 +19,8 @@ export default class Home extends React.Component{
         .done(res=>{
             if(res.code==0){
                 res.data.map((el,index)=>{
-                    el.user.avatar = `http://api.noods.me${el.user.avatar}`
+                    el.user.avatar = cfg.url + el.user.avatar;
+                   // el.user.avatar = `http://api.noods.me${el.user.avatar}`
                 })
                 this.setState({
                     previews: res.data
@@ -30,7 +31,8 @@ export default class Home extends React.Component{
         .done(res=>{
             if(res.code==0){
                 res.data.map((el,index)=>{
-                    el.avatar = `http://api.noods.me${el.avatar}`
+                    el.avatar = cfg.url + el.avatar;
+                    //el.avatar = `http://api.noods.me${el.avatar}`
                 })
                 this.setState({
                     authors: res.data
@@ -41,6 +43,7 @@ export default class Home extends React.Component{
 
     render(){
         let {previews, authors} = this.state;
+        
         return ( 
             <div className="ui container grid">
                 <div className="column twelve wide">

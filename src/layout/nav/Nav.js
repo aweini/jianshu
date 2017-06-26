@@ -8,13 +8,15 @@ export default class Nav extends React.Component{
     constructor(props){
         super(props);
         this.logout = this.logout.bind(this);
+      
     }
     logout(e){
+        console.log('注销');
         e.preventDefault();
         e.stopPropagation();
         this.props.logout();
     }
-
+    
     render(){
         let {myInfo} = this.props;
         let {logout} = this;

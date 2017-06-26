@@ -112,7 +112,7 @@ export default class Frame extends React.Component{
             if(code==0){
                 this.setState({
                     notebooks: data,
-                    previewName
+                    previewsName
                 })
             }
         })
@@ -120,13 +120,13 @@ export default class Frame extends React.Component{
 
     render(){
         let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage} = this;
-        let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews} = this.state;
+        let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
         if(!hasLoginReq){
             return (<div></div>);
         }
         return (
             <div>
-                <Nav {...{myInfo,logout}}/>
+                <Nav {...{myInfo,logout,initMyPage}}/>
                 <Route exact path="/" component={Home}></Route>
                 <Route exact path="/sign_in" render={
                     (props)=>(
@@ -153,7 +153,9 @@ export default class Frame extends React.Component{
                     )
                 }></Route>
                 <Route exact path="/my_page" render={
-                    <MyPage {...{initMyPage, notebooks, previewsName}}></MyPage>
+                    (props)=>(
+                        <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage}}></MyPage>
+                    )
                 }>
                 </Route>
             </div>
