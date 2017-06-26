@@ -106,17 +106,20 @@ export default class Frame extends React.Component{
         })
     }
 
-    initMyPage(user_id, previewsData, previewName){
+    initMyPage(user_id, previewsData, previewsName){
         console.log('frame initMyPage');
         console.log(user_id);
         console.log(previewsData);
-        console.log(previewName);
+        console.log(previewsName);
         this.getPreviews(previewsData);
         $.post(`${cfg.url}/getCollection`, {
             user_id
         })
-        .done((code, data)=>{
+        .done(({code, data})=>{
+            
             if(code==0){
+                console.log('done setState');
+            console.log(previewsName);
                 this.setState({
                     notebooks: data,
                     previewsName
@@ -128,6 +131,8 @@ export default class Frame extends React.Component{
     render(){
         let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage} = this;
         let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
+        console.log('frame render previewsName')
+        console.log(previewsName)
         if(!hasLoginReq){
             return (<div></div>);
         }
