@@ -12,16 +12,17 @@ let propTypes = {
 export default class MyPage extends React.Component{
     constructor(props){
         super(props);
-        console.log("my page");
-     console.log(props.initMyPage);
     }
     
     render(){
-        let {previewsName, notebooks, myPagePreviews,initMyPage} = this.props;
+        let {previewsName, notebooks, myPagePreviews,initMyPage,location} = this.props;
+        console.log('my page previewsName');
+        console.log(previewsName);
+        let {userInfo} = location.state;
         return(
             <div className="ui container grid">
                 <div className="twelve wide column">
-                    <AuthorInfo></AuthorInfo>
+                    <AuthorInfo {...{userInfo}}></AuthorInfo>
                     <div className="ui secondary pointing menu">
                         <span className="active item">
                              {previewsName}
@@ -30,7 +31,7 @@ export default class MyPage extends React.Component{
                     <PreviewList {...{previews: myPagePreviews,initMyPage}}></PreviewList>
                 </div>
                 <div className="four wide column">
-                    <Aside {...{notebooks}}></Aside>
+                    <Aside {...{notebooks,userInfo}}></Aside>
                 </div>
             </div>
 

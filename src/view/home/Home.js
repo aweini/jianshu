@@ -43,11 +43,12 @@ export default class Home extends React.Component{
 
     render(){
         let {previews, authors} = this.state;
+        let {initMyPage} = this.props;
         
         return ( 
             <div className="ui container grid">
                 <div className="column twelve wide">
-                    <PreviewList previews={previews}></PreviewList>
+                    <PreviewList {...{previews,initMyPage}}></PreviewList>
                 </div>
                  <div className="column four wide">
                     <Recommend authors={authors}></Recommend>

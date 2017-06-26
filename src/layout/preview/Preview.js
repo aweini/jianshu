@@ -1,7 +1,7 @@
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import S from './style.scss';
 
-export default class Preview extends React.Component{
+class Preview extends React.Component{
     constructor(props){
         super(props);
         let {createdAt} = this.props;
@@ -14,9 +14,27 @@ export default class Preview extends React.Component{
     initMyPageClick(e){
         e.preventDefault();
         e.stopPropagation();
-        this.props.history.push('/my_page');
-        console.log(this.props.initMyPage)
-        this.props.initMyPage(this.user_id,{user_id:this.user_id},"我的所有文章");
+        let {
+            article_id,
+            article_title,
+            previewContent,
+            user_id,
+            user_name,
+            createdAt,
+            avatar,
+            user_intro,
+            initMyPage,
+            history
+        } = this.props;
+        history.push('/my_page',{
+            userInfo:{
+                user_id,
+                user_name,
+                avatar,
+                user_intro
+            }
+        });
+        initMyPage(user_id,{user_id:user_id},"我的所有文章");
     }
 
     render(){
@@ -30,6 +48,7 @@ export default class Preview extends React.Component{
             avatar,
             user_intro,
             initMyPage,
+            history,
             children
         } = this.props;
         let {initMyPageClick} = this;
@@ -62,3 +81,5 @@ export default class Preview extends React.Component{
     }
     
 }
+
+export default withRouter(Preview);

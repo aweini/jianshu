@@ -96,6 +96,9 @@ export default class Frame extends React.Component{
         $.post(`${cfg.url}/getPreview`, data)
         .done(({code, data})=>{
             if(code==0){
+                data.map((el,index)=>{
+                    el.avatar = cfg.url + el.avatar;
+                })
                 this.setState({
                     myPagePreviews: data
                 })
@@ -104,6 +107,10 @@ export default class Frame extends React.Component{
     }
 
     initMyPage(user_id, previewsData, previewName){
+        console.log('frame initMyPage');
+        console.log(user_id);
+        console.log(previewsData);
+        console.log(previewName);
         this.getPreviews(previewsData);
         $.post(`${cfg.url}/getCollection`, {
             user_id
@@ -127,7 +134,12 @@ export default class Frame extends React.Component{
         return (
             <div>
                 <Nav {...{myInfo,logout,initMyPage}}/>
-                <Route exact path="/" component={Home}></Route>
+                <Route exact path="/" render={
+                    (props)=>(
+                        <Home {...{initMyPage}}></Home>
+                    )
+                    
+                }></Route>
                 <Route exact path="/sign_in" render={
                     (props)=>(
                         myInfo?(
@@ -154,7 +166,11 @@ export default class Frame extends React.Component{
                 }></Route>
                 <Route exact path="/my_page" render={
                     (props)=>(
-                        <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage}}></MyPage>
+                        <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage}}
+                        {...props}
+                        >
+
+                        </MyPage>
                     )
                 }>
                 </Route>
