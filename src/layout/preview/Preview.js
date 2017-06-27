@@ -4,13 +4,10 @@ import S from './style.scss';
 class Preview extends React.Component{
     constructor(props){
         super(props);
-        let {createdAt} = this.props;
-        createdAt = new Date(createdAt).toLocaleString();
         this.initMyPageClick = this.initMyPageClick.bind(this);
+        //console.log('preview');
+        //console.log(this.props);
     };
-  
-
-    
     initMyPageClick(e){
         e.preventDefault();
         e.stopPropagation();
@@ -51,6 +48,9 @@ class Preview extends React.Component{
             history,
             children
         } = this.props;
+
+       createdAt = new Date(createdAt).toLocaleString();
+        
         let {initMyPageClick} = this;
         return (
         <div className={`${S.note}`}>
@@ -83,3 +83,4 @@ class Preview extends React.Component{
 }
 
 export default withRouter(Preview);
+//export default Preview;

@@ -8,22 +8,38 @@ export default class Nav extends React.Component{
     constructor(props){
         super(props);
         this.logout = this.logout.bind(this);
+        this.initMyPageClick = this.initMyPageClick.bind(this);
+       // console.log('nav');
+        //console.log(this.props);
       
     }
     logout(e){
-        console.log('注销');
         e.preventDefault();
         e.stopPropagation();
         this.props.logout();
     }
-    
+    initMyPageClick(e){
+        e.preventDefault();
+        e.stopPropagation();
+        let {initMyPage, history, myInfo} = this.props;
+        let {user_id, user_name, avatar, user_intro} = myInfo;
+        history.push('/my_page',{
+            userInfo:{
+                user_id,
+                user_name,
+                avatar,
+                user_intro
+            } 
+        });
+        initMyPage(user_id,{user_id},'我的所有文章');
+    }
     render(){
         let {myInfo} = this.props;
-        let {logout} = this;
+        let {logout,initMyPageClick} = this;
         let userLink = null;
         if(myInfo){
             userLink=(
-                <NavLink to="/my_page" className={`${S.avatar} item`} activeClassName="active">
+                <NavLink to="/my_page" className={`${S.avatar} item`} activeClassName="active" onClick={initMyPageClick}>
                     <img src={myInfo.avatar} className="ui image avatar" alt=""/>
                     <span>{myInfo.username}</span>
                     <div className={S.dropDown}>

@@ -3,7 +3,7 @@ import Preview from './Preview';
 import S from "./style.scss";
 
 export default function PreviewList(props){
-    let {previews,initMyPage} = props;
+    let {previews,initMyPage,collectionClick} = props;
     //previews = [];
     //id: article_id,  id取别名为article_id
     previews = previews.map((el , index)=>{
@@ -18,6 +18,12 @@ export default function PreviewList(props){
         } = el;
         
         let {avatar ,user_name, user_intro} = user;
+
+        let collection = function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            collectionClick(collection_id, collection_name,user);
+        }
 
         return(
             <Preview {...{
@@ -34,15 +40,23 @@ export default function PreviewList(props){
             key={index}
             >
 
+            {
+                collection_id?(
+                    <Link to="" className={S.tag} onClick={collection}>
+                        {collection_name}
+                    </Link>
+                ):null
+            }
             
-            <Link to="" className={S.tag}>
-                {collection_name}
-            </Link>
 
             </Preview>
         )
 
     });
+
+    if(previews.length==0){
+        previews = "暂时没有文章哦"
+    }
 
     return (
         <div>

@@ -12,13 +12,19 @@ let propTypes = {
 export default class MyPage extends React.Component{
     constructor(props){
         super(props);
+        this.notebooksClick = this.notebooksClick.bind(this);
+    }
+
+    notebooksClick(collection_id, collection_name, userInfo){
+        let {initMyPage} = this.props;
+        console.log(["mypage collection_id",collection_id])
+        initMyPage(userInfo.user_id, {collection_id}, collection_name);
     }
     
     render(){
         let {previewsName, notebooks, myPagePreviews,initMyPage,location} = this.props;
-        console.log('my page previewsName');
-        console.log(previewsName);
         let {userInfo} = location.state;
+        let {notebooksClick} = this;
         return(
             <div className="ui container grid">
                 <div className="twelve wide column">
@@ -31,7 +37,7 @@ export default class MyPage extends React.Component{
                     <PreviewList {...{previews: myPagePreviews,initMyPage}}></PreviewList>
                 </div>
                 <div className="four wide column">
-                    <Aside {...{notebooks,userInfo}}></Aside>
+                    <Aside {...{notebooks,userInfo,notebooksClick}}></Aside>
                 </div>
             </div>
 
