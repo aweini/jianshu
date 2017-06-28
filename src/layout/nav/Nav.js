@@ -9,6 +9,7 @@ export default class Nav extends React.Component{
         super(props);
         this.logout = this.logout.bind(this);
         this.initMyPageClick = this.initMyPageClick.bind(this);
+        this.toWrite = this.toWrite.bind(this);
        // console.log('nav');
         //console.log(this.props);
       
@@ -16,7 +17,20 @@ export default class Nav extends React.Component{
     logout(e){
         e.preventDefault();
         e.stopPropagation();
-        this.props.logout();
+        let {history, logout} = this.props;
+        logout();
+        history.push('/',{});
+        
+    }
+    toWrite(e){
+        e.preventDefault();
+        e.stopPropagation();
+        let {myInfo,history} = this.props;
+        if(myInfo){
+            history.push('/write',{});
+        }else{
+            history.push('/sign_in',{});
+        }
     }
     initMyPageClick(e){
         e.preventDefault();
@@ -35,7 +49,7 @@ export default class Nav extends React.Component{
     }
     render(){
         let {myInfo} = this.props;
-        let {logout,initMyPageClick} = this;
+        let {logout,initMyPageClick,toWrite} = this;
         let userLink = null;
         if(myInfo){
             userLink=(
@@ -62,7 +76,7 @@ export default class Nav extends React.Component{
                         <NavLink exact  to="/" className="item" activeClassName="active">首页 </NavLink>
                         <div className="menu right">
                             {userLink}
-                            <NavLink to="/write" className="item" activeClassName="active">写文章</NavLink>
+                            <NavLink to="/write" className="item" activeClassName="active" onClick={toWrite}>写文章</NavLink>
                         </div>
 
                     </div>

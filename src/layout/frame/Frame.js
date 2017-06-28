@@ -7,6 +7,7 @@ import Home from 'home/Home.js';
 import SignIn from 'user/SignIn';
 import SignUp from 'user/SignUp';
 import MyPage from 'user/MyPage';
+import Write from 'write/Write';
 import cfg from 'config/config.json';
 
 //有route的路有页面 this.props里有history location match 等其他属性，其中history里有push函数 location等等
@@ -38,11 +39,13 @@ export default class Frame extends React.Component{
         this.logout = this.logout.bind(this);
         this.getPreviews = this.getPreviews.bind(this);
         this.initMyPage = this.initMyPage.bind(this);
+        this.upDateMyInfo = this.upDateMyInfo.bind(this);
     }
 
     initMyInfo(myInfo){
         if(myInfo){
             myInfo.avatar = cfg.url+ myInfo.avatar;
+            myInfo.user_intro = myInfo.user_intro?myInfo.user_intro:'没有自我介绍';
         }
         this.setState({
             myInfo
@@ -97,9 +100,10 @@ export default class Frame extends React.Component{
             this.initMyInfo(res.data);
         })
         this.setState({hasLoginReq: true});
-        console.log(this.props);
         let {pathname, state} = this.props.location;
-        if(state){
+        console.log('state');
+        console.log(state);
+        if(state&&state.userInfo){
             let {user_id} = state.userInfo;
             if(pathname='/my_page'){
                 this.initMyPage(user_id,{user_id},'所有文章');
@@ -147,8 +151,16 @@ export default class Frame extends React.Component{
         })
     }
 
+    upDateMyInfo(user_intro){
+        let {myInfo} = this.state;
+        myInfo.user_intro = user_intro;
+        this.setState({
+            myInfo
+        })
+    }
+
     render(){
-        let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage} = this;
+        let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage,upDateMyInfo} = this;
         let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
 
         if(!hasLoginReq){
@@ -190,13 +202,21 @@ export default class Frame extends React.Component{
                 }></Route>
                 <Route exact path="/my_page" render={
                     (props)=>(
-                        <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage}}
+                        <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage,myInfo,upDateMyInfo}}
                         {...props}
                         >
 
                         </MyPage>
                     )
                 }>
+                </Route>
+
+                <Route exact path="/write" render={
+                    (props)=>(
+                        <Write></Write>
+                    )
+                }>
+
                 </Route>
             </div>
             )

@@ -22,13 +22,21 @@ export default class MyPage extends React.Component{
     }
     
     render(){
-        let {previewsName, notebooks, myPagePreviews,initMyPage,location} = this.props;
+        let {previewsName, notebooks, myPagePreviews,initMyPage,location,myInfo,upDateMyInfo} = this.props;
         let {userInfo} = location.state;
         let {notebooksClick} = this;
+        let isMe = false;
+        if(myInfo){
+             isMe = (myInfo.user_id == userInfo.user_id)? true: false;
+             if(isMe){
+                userInfo = myInfo;
+             }
+            
+        }
         return(
             <div className="ui container grid">
                 <div className="twelve wide column">
-                    <AuthorInfo {...{userInfo}}></AuthorInfo>
+                    <AuthorInfo {...{userInfo,initMyPage}}></AuthorInfo>
                     <div className="ui secondary pointing menu">
                         <span className="active item">
                              {previewsName}
@@ -37,7 +45,7 @@ export default class MyPage extends React.Component{
                     <PreviewList {...{previews: myPagePreviews,initMyPage}}></PreviewList>
                 </div>
                 <div className="four wide column">
-                    <Aside {...{notebooks,userInfo,notebooksClick}}></Aside>
+                    <Aside {...{notebooks,userInfo,notebooksClick,isMe,upDateMyInfo}}></Aside>
                 </div>
             </div>
 
