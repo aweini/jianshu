@@ -27,7 +27,9 @@ export default class Nav extends React.Component{
         e.stopPropagation();
         let {myInfo,history} = this.props;
         if(myInfo){
-            history.push('/write',{});
+            history.push('/write',{
+                myInfo
+            });
         }else{
             history.push('/sign_in',{});
         }
@@ -49,6 +51,9 @@ export default class Nav extends React.Component{
     }
     render(){
         let {myInfo} = this.props;
+         console.log('nav render');
+        console.log('myInfo');
+        console.log(myInfo);
         let {logout,initMyPageClick,toWrite} = this;
         let userLink = null;
         if(myInfo){

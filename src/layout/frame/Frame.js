@@ -101,7 +101,7 @@ export default class Frame extends React.Component{
         })
         this.setState({hasLoginReq: true});
         let {pathname, state} = this.props.location;
-        console.log('state');
+        console.log('frame componentDidMount state');
         console.log(state);
         if(state&&state.userInfo){
             let {user_id} = state.userInfo;
@@ -167,6 +167,9 @@ export default class Frame extends React.Component{
             return (<div></div>);
         }
         let {history} = this.props;
+        console.log('frame render');
+        console.log('myInfo');
+        console.log(myInfo);
         return (
             <div>
                 <Nav {...{myInfo,logout,initMyPage,history}}/>
@@ -213,7 +216,7 @@ export default class Frame extends React.Component{
 
                 <Route exact path="/write" render={
                     (props)=>(
-                        <Write></Write>
+                        <Write {...{myInfo}}></Write>
                     )
                 }>
 

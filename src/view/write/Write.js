@@ -4,9 +4,77 @@ import S from './style.scss';
 export default class Write extends React.Component{
     constructor(props){
         super(props)
+        //let {myInfo} = this.props;//刷新就没了
+        //let {state} = this.props.location;
+        console.log('write constructor');
+        console.log(this.props);
+        this.state = {
+            collections: [],
+            titleVal:'',
+            cltVal: '',
+            contentVal: ''
+        }
+
+        this.changeTitle = this.changeTitle.bind(this);
+        this.changeClt = this.changeClt.bind(this);
+        this.changeContent = this.changeContent.bind(this);
+        this.addCollection = this.addCollection.bind(this);
+    }
+
+    changeTitle(ev){
+        this.setState({
+            titleVal: ev.target.value
+        })
+    }
+    changeClt(ev){
+        this.setState({
+            changeClt: ev.target.value
+        })
+    }
+    changeContent(ev){
+        this.setState({
+            changeContent: ev.target.value
+        })
+    }
+    addCollection(ev){
+        let {user_id} = this.props.myInfo;
+        $.post(`${cfg.url}/addCollection`, {user_id})
+        .done(({code, data})=>{
+            if(code==0){
+                this.setState({
+                    collections: data,
+                    cltVal: ''
+                })
+            }
+            
+        })
+    }
+    componentDidMount(){
+        console.log('myInfo')
+        console.log(this.props.myInfo);
+        let {user_id} = this.props.myInfo;
+        $.post(`${cfg.url}/getCollection`,{user_id})
+        .done((res)=>{
+            if(res.code==0){
+                this.setState({
+                    collections: res.data
+                })
+            }
+        })
     }
 
     render(){
+        let {changeTitle, changeClt, changeContent} = this;
+        let {collections} = this.state;
+        let {} = this.props;
+
+        collections = collections.map((el,index)=>{
+            return(
+                <div className="item" key={index} data-value={el.id}>
+                    {el.collection_name}
+                </div>
+            )
+        })
         return(
             <div className="ui container">
                 <header className="ui header dividing">
