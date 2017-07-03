@@ -28,7 +28,7 @@ export default class Write extends React.Component{
     }
     changeClt(ev){
         this.setState({
-            changeClt: ev.target.value
+            cltVal: ev.target.value
         })
     }
     changeContent(ev){
@@ -37,35 +37,46 @@ export default class Write extends React.Component{
         })
     }
     addCollection(ev){
+        console.log('addCollection');
         let {user_id} = this.props.myInfo;
-        $.post(`${cfg.url}/addCollection`, {user_id})
-        .done(({code, data})=>{
-            if(code==0){
-                this.setState({
-                    collections: data,
-                    cltVal: ''
-                })
-            }
-            
-        })
+        if(ev.keyCode==13){
+             console.log('回车');
+            $.post(`${cfg.url}/addCollection`, {
+                name: this.state.cltVal,
+                user_id
+            })
+            .done(({code, data})=>{
+                if(code==0){
+                    this.setState({
+                        collections: data,
+                        cltVal: ''
+                    })
+                }
+                
+            })
+        }
+       
     }
     componentDidMount(){
         console.log('myInfo')
         console.log(this.props.myInfo);
-        let {user_id} = this.props.myInfo;
-        $.post(`${cfg.url}/getCollection`,{user_id})
-        .done((res)=>{
-            if(res.code==0){
-                this.setState({
-                    collections: res.data
-                })
-            }
-        })
+        if(this.props.myInfo){
+            let {user_id} = this.props.myInfo;
+            $.post(`${cfg.url}/getCollection`,{user_id})
+            .done((res)=>{
+                if(res.code==0){
+                    this.setState({
+                        collections: res.data
+                    })
+                }
+            })
+        }
+        
     }
 
     render(){
-        let {changeTitle, changeClt, changeContent} = this;
-        let {collections} = this.state;
+        let {changeTitle, changeClt, changeContent,addCollection} = this;
+        let {collections,titleVal,cltVal,contentVal} = this.state;
         let {} = this.props;
 
         collections = collections.map((el,index)=>{
@@ -80,7 +91,7 @@ export default class Write extends React.Component{
                 <header className="ui header dividing">
                     <h1>写文章</h1>
                 </header>
-                <form
+                <div
                     className="ui form"
                 >
                     <div className="field">
@@ -88,6 +99,8 @@ export default class Write extends React.Component{
                             type="text"
                             className="form-control"
                             placeholder="标题"
+                            value = {titleVal}
+                            onChange = {changeTitle}
                         />
                     </div>
                     <div className="fields">
@@ -109,8 +122,11 @@ export default class Write extends React.Component{
                                 type="text"
                                 className=""
                                 placeholder="回车, 添加文集"
-
+                                value={cltVal}
+                                onChange={changeClt}
+                                onKeyDown={addCollection}
                             />
+                
                         </div>
                     </div>
                     <div className="field">
@@ -118,7 +134,8 @@ export default class Write extends React.Component{
                             rows="16"
                             className=""
                             placeholder="随便写点文字. . ."
-                        >
+                            onChange = {changeContent}
+                        >{contentVal}
                         </textarea>
                     </div>
                     <div className="field">
@@ -127,7 +144,7 @@ export default class Write extends React.Component{
                         >保存</button>
                     </div>
 
-                </form>
+                </div>
             </div>
         )
     }

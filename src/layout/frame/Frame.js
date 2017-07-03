@@ -89,7 +89,8 @@ export default class Frame extends React.Component{
             }
         })
     }
-
+//只在这个frame组件第一次挂在的时候调用，后面路由间跳转都是在frame下的路由间跳转frame不变，所以这个不会再执行，
+//除非刷新页面，frame的挂载会再执行一次
     componentDidMount(){
         $.post(`${cfg.url}/autologin`)
         .done((res)=>{
@@ -102,7 +103,7 @@ export default class Frame extends React.Component{
         this.setState({hasLoginReq: true});
         let {pathname, state} = this.props.location;
         console.log('frame componentDidMount state');
-        console.log(state);
+        console.log(this.props);
         if(state&&state.userInfo){
             let {user_id} = state.userInfo;
             if(pathname='/my_page'){
@@ -127,13 +128,16 @@ export default class Frame extends React.Component{
                 data.map((el,index)=>{
                     el.user.avatar = cfg.url + el.user.avatar;
                 })
+                console.log('getPreviews');
                 this.setState({
                     myPagePreviews: data
                 })
             }
         })
     }
-
+//比如从home页点击nav上的个人头像跳转到个人页面，刚跳过去的时候render()一次，
+//后续getPreviews setState会render()一次
+//getCollection ajax数据返回的时候 setState又会render()一次 这几次setState相差时间太长所以各自render
     initMyPage(user_id, previewsData, previewsName){
         console.log(["previewsData",previewsData,user_id])
         this.getPreviews(previewsData);
@@ -143,6 +147,7 @@ export default class Frame extends React.Component{
         .done(({code, data})=>{
             
             if(code==0){
+                 console.log('getCollection');
                 this.setState({
                     notebooks: data,
                     previewsName
@@ -169,6 +174,8 @@ export default class Frame extends React.Component{
         let {history} = this.props;
         console.log('frame render');
         console.log('myInfo');
+        //刚componentDidMount的时候 里面的ajax还没有请求成功所以没有myInfo
+        //等ajax请求回来 setState会重新调用render函数，再渲染
         console.log(myInfo);
         return (
             <div>

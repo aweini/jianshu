@@ -28,7 +28,7 @@ export default class Nav extends React.Component{
         let {myInfo,history} = this.props;
         if(myInfo){
             history.push('/write',{
-                myInfo
+                userInfo:myInfo
             });
         }else{
             history.push('/sign_in',{});
