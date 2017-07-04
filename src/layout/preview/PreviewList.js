@@ -3,7 +3,7 @@ import Preview from './Preview';
 import S from "./style.scss";
 
 export default function PreviewList(props){
-    let {previews,initMyPage,collectionClick} = props;
+    let {previews,initMyPage,collectionClick,pathname} = props;
     //previews = [];
     //id: article_id,  id取别名为article_id
     previews = previews.map((el , index)=>{
@@ -41,7 +41,7 @@ export default function PreviewList(props){
             >
 
             {
-                collection_id?(
+                collection_id&&pathname!='/my_page'?(
                     <Link to="" className={S.tag} onClick={collection}>
                         {collection_name}
                     </Link>

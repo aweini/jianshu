@@ -13,6 +13,8 @@ export default class MyPage extends React.Component{
     constructor(props){
         super(props);
         this.notebooksClick = this.notebooksClick.bind(this);
+        let {pathname} = props.location;
+        this.pathname = pathname;
     }
 
     notebooksClick(collection_id, collection_name, userInfo){
@@ -24,7 +26,7 @@ export default class MyPage extends React.Component{
     render(){
         let {previewsName, notebooks, myPagePreviews,initMyPage,location,myInfo,upDateMyInfo} = this.props;
         let {userInfo} = location.state;
-        let {notebooksClick} = this;
+        let {notebooksClick,pathname} = this;
         let isMe = false;
         if(myInfo){
              isMe = (myInfo.user_id == userInfo.user_id)? true: false;
@@ -42,7 +44,7 @@ export default class MyPage extends React.Component{
                              {previewsName}
                         </span>
                     </div>
-                    <PreviewList {...{previews: myPagePreviews,initMyPage}}></PreviewList>
+                    <PreviewList {...{previews: myPagePreviews,initMyPage,pathname}}></PreviewList>
                 </div>
                 <div className="four wide column">
                     <Aside {...{notebooks,userInfo,notebooksClick,isMe,upDateMyInfo}}></Aside>

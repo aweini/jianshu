@@ -30,7 +30,8 @@ export default class Frame extends React.Component{
             hasLoginReq: false,
             myPagePreviews: [],
             notebooks: [],
-            previewsName: '所有文章'
+            previewsName: '所有文章',
+            collections:[]
         }
         this.signInAjax = this.signInAjax.bind(this);
         this.signUpAjax = this.signUpAjax.bind(this);
@@ -40,6 +41,8 @@ export default class Frame extends React.Component{
         this.getPreviews = this.getPreviews.bind(this);
         this.initMyPage = this.initMyPage.bind(this);
         this.upDateMyInfo = this.upDateMyInfo.bind(this);
+        this.getCollection = this.getCollection.bind(this);
+        this.updataCollection = this.updataCollection.bind(this);
     }
 
     initMyInfo(myInfo){
@@ -81,6 +84,24 @@ export default class Frame extends React.Component{
             
         })
     }
+    getCollection(user_id){
+        console.log('getCollection collections')
+        $.post(`${cfg.url}/getCollection`,{user_id})
+            .done((res)=>{
+                console.log(res)
+                if(res.code==0){
+                    this.setState({
+                        collections: res.data
+                    })
+                }
+            })
+    }
+    updataCollection(collections){
+        this.setState({
+            collections:collections
+        })
+    }
+
     logout(){
         $.post(`${cfg.url}/logout`)
         .done((res)=>{
@@ -102,12 +123,15 @@ export default class Frame extends React.Component{
         })
         this.setState({hasLoginReq: true});
         let {pathname, state} = this.props.location;
-        console.log('frame componentDidMount state');
-        console.log(this.props);
+        //console.log('frame componentDidMount state');
+        //console.log(this.props);
         if(state&&state.userInfo){
             let {user_id} = state.userInfo;
             if(pathname='/my_page'){
                 this.initMyPage(user_id,{user_id},'所有文章');
+            }
+            if(pathname='/write'){
+                this.getCollection(user_id);
             }
         }
         
@@ -128,7 +152,7 @@ export default class Frame extends React.Component{
                 data.map((el,index)=>{
                     el.user.avatar = cfg.url + el.user.avatar;
                 })
-                console.log('getPreviews');
+                //console.log('getPreviews');
                 this.setState({
                     myPagePreviews: data
                 })
@@ -139,7 +163,7 @@ export default class Frame extends React.Component{
 //后续getPreviews setState会render()一次
 //getCollection ajax数据返回的时候 setState又会render()一次 这几次setState相差时间太长所以各自render
     initMyPage(user_id, previewsData, previewsName){
-        console.log(["previewsData",previewsData,user_id])
+        //console.log(["previewsData",previewsData,user_id])
         this.getPreviews(previewsData);
         $.post(`${cfg.url}/getCollection`, {
             user_id
@@ -147,7 +171,7 @@ export default class Frame extends React.Component{
         .done(({code, data})=>{
             
             if(code==0){
-                 console.log('getCollection');
+                 //console.log('getCollection');
                 this.setState({
                     notebooks: data,
                     previewsName
@@ -165,21 +189,21 @@ export default class Frame extends React.Component{
     }
 
     render(){
-        let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage,upDateMyInfo} = this;
-        let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews,notebooks,previewsName} = this.state;
+        let {signInAjax, signUpAjax, clearTipMsg,logout,initMyPage,upDateMyInfo,getCollection,updataCollection} = this;
+        let {signInMsg, signUpMsg,myInfo,hasLoginReq,myPagePreviews,notebooks,previewsName,collections} = this.state;
 
         if(!hasLoginReq){
             return (<div></div>);
         }
         let {history} = this.props;
-        console.log('frame render');
-        console.log('myInfo');
+        //console.log('frame render');
+        //console.log('myInfo');
         //刚componentDidMount的时候 里面的ajax还没有请求成功所以没有myInfo
         //等ajax请求回来 setState会重新调用render函数，再渲染
-        console.log(myInfo);
+       // console.log(myInfo);
         return (
             <div>
-                <Nav {...{myInfo,logout,initMyPage,history}}/>
+                <Nav {...{myInfo,logout,initMyPage,history,getCollection}}/>
                 <Route exact path="/" render={
                     (props)=>(
                         <Home {...{initMyPage}} {...props}></Home>
@@ -223,7 +247,7 @@ export default class Frame extends React.Component{
 
                 <Route exact path="/write" render={
                     (props)=>(
-                        <Write {...{myInfo}}></Write>
+                        <Write {...{myInfo,collections,updataCollection}}></Write>
                     )
                 }>
 
