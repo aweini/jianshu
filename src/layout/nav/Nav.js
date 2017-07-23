@@ -30,6 +30,7 @@ export default class Nav extends React.Component{
             history.push('/write',{
                 userInfo:myInfo
             });
+            this.props.getCollection(myInfo.user_id);
         }else{
             history.push('/sign_in',{});
         }
@@ -53,9 +54,9 @@ export default class Nav extends React.Component{
     }
     render(){
         let {myInfo} = this.props;
-         console.log('nav render');
-        console.log('myInfo');
-        console.log(myInfo);
+        // console.log('nav render');
+        //console.log('myInfo');
+       // console.log(myInfo);
         let {logout,initMyPageClick,toWrite} = this;
         let userLink = null;
         if(myInfo){

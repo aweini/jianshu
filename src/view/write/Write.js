@@ -9,16 +9,16 @@ export default class Write extends React.Component{
         console.log('write constructor');
         console.log(this.props);
         this.state = {
-            collections: [],
             titleVal:'',
             cltVal: '',
             contentVal: ''
         }
-
+        this.collectionName = {};
         this.changeTitle = this.changeTitle.bind(this);
         this.changeClt = this.changeClt.bind(this);
         this.changeContent = this.changeContent.bind(this);
         this.addCollection = this.addCollection.bind(this);
+        this.onsubmit = this.onsubmit.bind(this);
     }
 
     changeTitle(ev){
@@ -33,12 +33,13 @@ export default class Write extends React.Component{
     }
     changeContent(ev){
         this.setState({
-            changeContent: ev.target.value
+            contentVal: ev.target.value
         })
     }
     addCollection(ev){
         console.log('addCollection');
         let {user_id} = this.props.myInfo;
+        console.log(this.props)
         if(ev.keyCode==13){
              console.log('回车');
             $.post(`${cfg.url}/api/addCollection`, {
@@ -48,17 +49,16 @@ export default class Write extends React.Component{
             .done(({code, data})=>{
                 if(code==0){
                     this.setState({
-                        collections: data,
                         cltVal: ''
                     })
+                    this.props.updataCollection(data)
                 }
                 
             })
         }
        
     }
-    componentDidMount(){
-        
+    componentDidMount(){ 
         if(this.props.myInfo){
             let {user_id} = this.props.myInfo;
             $.post(`${cfg.url}/api/getCollection`,{user_id})
@@ -72,14 +72,45 @@ export default class Write extends React.Component{
                 }
             })
         }
+        $(this.refs.dropdown).dropdown();
         
+    }
+    componentWillUnmout(){
+         $(this.refs.dropdown).off();
+    }
+
+    onsubmit(e){
+        e.preventDefault();
+        e.stopPropagation();
+        let {value: cltId} = this.refs.cltIdInput;
+        let {titleVal, contentVal} = this.state;
+        let {user_id} = this.props.myInfo;
+        let {collectionName} = this;
+        $.post(`${cfg.url}/api/addArticle`,{
+            article_title: titleVal,
+            article_content: contentVal,
+            user_id,
+            collection_id: cltId,
+            collection_name: collectionName[cltId]
+        }).done((res)=>{
+            if(res.code==0){
+                this.setState({
+                    titleVal:'',
+                    contentVal: ''
+                });
+            }
+        })
     }
 
     render(){
-        let {changeTitle, changeClt, changeContent,addCollection} = this;
+
+        let {changeTitle, changeClt, changeContent,addCollection,collectionName,onsubmit} = this;
         let {collections,titleVal,cltVal,contentVal} = this.state;
-        let {} = this.props;
+        if(!collections){
+            collections = this.props.collections;
+        }
         collections = collections.map((el,index)=>{
+            collectionName[el._id] = el.collection_name;
             return(
                 <div className="item" key={index} data-value={el._id}>
                     {el.collection_name}
@@ -105,11 +136,13 @@ export default class Write extends React.Component{
                     </div>
                     <div className="fields">
                         <div className="field five wide column required">
-                            <div className="ui selection dropdown" id="writeArtical">
+                            <div className="ui selection dropdown" id="writeArtical"
+                            ref="dropdown"
+                            >
                                 <input
                                     type="hidden"
                                     name="album"
-                                    ref="cltInput"
+                                    ref="cltIdInput"
                                 />
                                 <div className="default text">选择一个文集</div>
                                 <i className="dropdown icon"></i>
@@ -136,12 +169,14 @@ export default class Write extends React.Component{
                             className=""
                             placeholder="随便写点文字. . ."
                             onChange = {changeContent}
-                        >{contentVal}
+                            value={contentVal}
+                        >
                         </textarea>
                     </div>
                     <div className="field">
-                        <button type="submit"
+                        <button 
                             className="ui button primary"
+                            onClick={onsubmit}
                         >保存</button>
                     </div>
 

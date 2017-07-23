@@ -7,6 +7,10 @@ var mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema({
     username: String,
-    password: String
+    password: String,
+    avatar: {
+        type: String,
+        default: "/backend/assets/images/cat1.jpg"
+    }
 });
 

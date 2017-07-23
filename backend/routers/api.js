@@ -6,6 +6,7 @@ var router = express.Router();
 var User = require('../models/User');
 var Collection = require('../models/Collection');
 var cookies = require('cookies');
+var Article = require('../models/Article');
 
 //统一返回格式
 var responseData;
@@ -51,8 +52,8 @@ router.post('/register', function(req, res, next){
     }).then(function(newUserInfo){
         //cookie里不能有汉字,汉字需要编码
         newUserInfo.username = encodeURI(newUserInfo.username);
-        console.log(newUserInfo);
-        console.dir(newUserInfo);
+        // console.log(newUserInfo);
+        // console.dir(newUserInfo);
         responseData.data = {
             avatar: '',
             user_id: newUserInfo._doc._id,
@@ -114,7 +115,7 @@ router.post('/autoLogin', function(req, res){
     req.cookies = new cookies(req, res);
     req.userInfo = {};
     var cookiesUserInfo = req.cookies.get('userInfo');
-    console.log(cookiesUserInfo);
+    //console.log(cookiesUserInfo);
     if(cookiesUserInfo){
         req.userInfo = JSON.parse(cookiesUserInfo);
         req.userInfo.user_name = decodeURI(req.userInfo.user_name)
@@ -174,8 +175,8 @@ router.post("/addCollection", function(req, res){
         user: user_id,
         name: addCollection_name
     }).then(function(collectionInfo){
-        console.log("addCollection");
-        console.log(collectionInfo);
+        //console.log("addCollection");
+        //console.log(collectionInfo);
         if(collectionInfo){
             responseData.code= "4";
             responseData.msg = "文集名已经存在";
@@ -202,7 +203,82 @@ router.post("/addCollection", function(req, res){
 });
 //获取文章列表
 router.post("/getPreview", function(req, res){
+    let user_id = req.body.user_id;
+    console.log("获取文章列表");
+    console.log(user_id);
+    if(user_id){
+        Article.find({user: user_id}).populate('user').then(function(articles){
+            if(articles){
+                responseData.data = articles;
+                responseData.msg = "查找文章成功";
+            }else{
+                responseData.data = [];
+                responseData.msg = "暂无文章";
+            }
+            res.json(responseData);
+        })
+    }else{
+       
+         Article.find().populate('user').then(function(articles){
+            if(articles){
+                responseData.data = articles;
+                responseData.msg = "查找文章成功";
+            }else{
+                responseData.data = [];
+                responseData.msg = "暂无文章";
+            }
+            res.json(responseData);
+        })
+        
+    }
 
+})
+
+//获取作者列表
+router.post("/getAuthor", function(req, res){
+    User.find().then(function(users){
+        if(users){
+            responseData.msg = "查找用户列表成功";
+            responseData.data = users;
+        }else{
+             responseData.msg = "暂无用户";
+            responseData.data = [];
+        }
+        res.json(responseData);
+    });
+})
+
+router.post("/addArticle", function(req, res){
+    var article_title = req.body.article_title;
+    var article_content = req.body.article_content;
+    var user_id = req.body.user_id; 
+    var collection_id = req.body.collection_id;
+    // var collection_name = req.body.collection_name;
+
+    Article.findOne({
+        user: user_id,
+        article_title: article_title
+    }).then(function(article){
+        if(article){
+            responseData.code = 2;
+            responseData.msg = "您的文章名称已经存在";
+            res.json(responseData);
+        }else{
+            var article = new Article({
+                user : user_id,
+                the_collection: collection_id,
+                article_title: article_title,
+                article_content : article_content
+            });
+            return article.save();
+        }
+    }).then(function(newArticle){
+        if(newArticle){
+            responseData.msg = "创建文章成功";
+            res.json(responseData);
+        }
+    })
+    
 })
 
 

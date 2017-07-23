@@ -10,7 +10,7 @@ var express = require("express");
 var app = express();
 //设置静态文件托管
 //当用户访问的url以/public开始，那么直接返回对应__dirname+'/public'下的文件
-app.use('/public' , express.static(__dirname+'/public'));
+app.use('/backend/assets' , express.static(__dirname+'/backend/assets'));
 //加载数据库模块
 var mongoose = require("mongoose");
 //加载body-parser模块,用来处理post提交过来的数据

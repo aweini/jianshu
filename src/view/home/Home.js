@@ -16,9 +16,11 @@ export default class Home extends React.Component{
     }
 
     componentDidMount(){
-        $.post(`${cfg.url}/getPreview`)
+        $.post(`${cfg.url}/api/getPreview`)
         .done(res=>{
             if(res.code==0){
+                console.log("getPreview res");
+                console.log(res);
                 res.data.map((el,index)=>{
                     el.user.avatar = cfg.url + el.user.avatar;
                    // el.user.avatar = `http://api.noods.me${el.user.avatar}`
@@ -28,7 +30,7 @@ export default class Home extends React.Component{
                 })
             }
         });
-        $.post(`${cfg.url}/getAuthor`)
+        $.post(`${cfg.url}/api/getAuthor`)
         .done(res=>{
             if(res.code==0){
                 res.data.map((el,index)=>{
