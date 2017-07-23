@@ -4,10 +4,11 @@
 const path = require("path");
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OpenBrowser = require('open-browser-webpack-plugin');
 module.exports = {
     entry: {
            app:[
-               'webpack-hot-middleware/client?reload=true',
+            //    'webpack-hot-middleware/client?reload=true',
                './src/app.js'
            ]
         },
@@ -93,7 +94,8 @@ module.exports = {
             React: 'react',
             ReactDOM: 'react-dom',
             PT: 'prop-types'
-        })
+        }),
+        new OpenBrowser({url: `http://localhost:${8080}`})
     ],
     devtool: 'cheap-module-eval-source-map'
 };

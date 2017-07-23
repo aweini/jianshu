@@ -38,7 +38,9 @@ export default class Nav extends React.Component{
         e.preventDefault();
         e.stopPropagation();
         let {initMyPage, history, myInfo} = this.props;
-        let {user_id, user_name, avatar, user_intro} = myInfo;
+        let {id:user_id, username:user_name, avatar, user_intro} = myInfo;
+        console.log('initMyPageClick');
+        console.log(myInfo);
         history.push('/my_page',{
             userInfo:{
                 user_id,

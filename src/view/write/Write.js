@@ -41,7 +41,7 @@ export default class Write extends React.Component{
         let {user_id} = this.props.myInfo;
         if(ev.keyCode==13){
              console.log('回车');
-            $.post(`${cfg.url}/addCollection`, {
+            $.post(`${cfg.url}/api/addCollection`, {
                 name: this.state.cltVal,
                 user_id
             })
@@ -58,13 +58,14 @@ export default class Write extends React.Component{
        
     }
     componentDidMount(){
-        console.log('myInfo')
-        console.log(this.props.myInfo);
+        
         if(this.props.myInfo){
             let {user_id} = this.props.myInfo;
-            $.post(`${cfg.url}/getCollection`,{user_id})
+            $.post(`${cfg.url}/api/getCollection`,{user_id})
             .done((res)=>{
                 if(res.code==0){
+                     console.log("collections res.data");
+                     console.log(res.data);
                     this.setState({
                         collections: res.data
                     })
@@ -78,10 +79,9 @@ export default class Write extends React.Component{
         let {changeTitle, changeClt, changeContent,addCollection} = this;
         let {collections,titleVal,cltVal,contentVal} = this.state;
         let {} = this.props;
-
         collections = collections.map((el,index)=>{
             return(
-                <div className="item" key={index} data-value={el.id}>
+                <div className="item" key={index} data-value={el._id}>
                     {el.collection_name}
                 </div>
             )
@@ -114,6 +114,7 @@ export default class Write extends React.Component{
                                 <div className="default text">选择一个文集</div>
                                 <i className="dropdown icon"></i>
                                 <div className="menu">
+                                    {collections}
                                 </div>
                             </div>
                         </div>

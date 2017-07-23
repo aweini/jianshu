@@ -53,7 +53,7 @@ export default class Frame extends React.Component{
     }
 
     signInAjax(reqData){
-        $.post(`${cfg.url}/login`,reqData)
+        $.post(`${cfg.url}/api/login`,reqData)
         .done(res=>{
             let {code, data} = res;
             if(code==0){
@@ -64,7 +64,7 @@ export default class Frame extends React.Component{
         })
     }
     signUpAjax(reqData){
-        $.post(`${cfg.url}/register`,reqData)
+        $.post(`${cfg.url}/api/register`,reqData)
         .done(res=>{
             let {code, data} = res;
             this.setState({
@@ -92,11 +92,11 @@ export default class Frame extends React.Component{
 //只在这个frame组件第一次挂在的时候调用，后面路由间跳转都是在frame下的路由间跳转frame不变，所以这个不会再执行，
 //除非刷新页面，frame的挂载会再执行一次
     componentDidMount(){
-        $.post(`${cfg.url}/autologin`)
+        $.post(`${cfg.url}/api/autoLogin`,{})
         .done((res)=>{
             if(res.code==0){
-                res.data.user_id = res.data.id;
-                res.data.user_name = res.data.username;
+                // res.data.user_id = res.data.id;
+                // res.data.user_name = res.data.username;
             }
             this.initMyInfo(res.data);
         })
@@ -122,7 +122,7 @@ export default class Frame extends React.Component{
     }
 
     getPreviews(data){
-        $.post(`${cfg.url}/getPreview`, data)
+        $.post(`${cfg.url}/api/getPreview`, data)
         .done(({code, data})=>{
             if(code==0){
                 data.map((el,index)=>{
@@ -141,7 +141,7 @@ export default class Frame extends React.Component{
     initMyPage(user_id, previewsData, previewsName){
         console.log(["previewsData",previewsData,user_id])
         this.getPreviews(previewsData);
-        $.post(`${cfg.url}/getCollection`, {
+        $.post(`${cfg.url}/api/getCollection`, {
             user_id
         })
         .done(({code, data})=>{

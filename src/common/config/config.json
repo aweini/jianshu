@@ -1,3 +1,4 @@
 {
-  "url": "http://api.noods.me"
+  "url": "http://localhost:8080",
+  "url2": "http://api.noods.me"
 }
