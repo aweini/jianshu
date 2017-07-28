@@ -12,7 +12,7 @@ function Author(props){
         history.push('/my_page',{
             userInfo
         })
-        initMyPage(user_id,{user_id},"所有文章");
+        initMyPage(user_id,"","所有文章");
     }
 
     return(

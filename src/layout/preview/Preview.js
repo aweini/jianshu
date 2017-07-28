@@ -32,7 +32,7 @@ class Preview extends React.Component{
                 user_intro
             }
         });
-        initMyPage(user_id,{user_id:user_id},"我的所有文章");
+        initMyPage(user_id,"","我的所有文章");
     }
 
     showArticle(e){

@@ -130,7 +130,7 @@ export default class Frame extends React.Component{
         if(state&&state.userInfo){
             let {user_id} = state.userInfo;
             if(pathname='/my_page'){
-                this.initMyPage(user_id,{user_id},'所有文章');
+                this.initMyPage(user_id,"",'所有文章');
             }
             if(pathname='/write'){
                 this.getCollection(user_id);
@@ -164,9 +164,12 @@ export default class Frame extends React.Component{
 //比如从home页点击nav上的个人头像跳转到个人页面，刚跳过去的时候render()一次，
 //后续getPreviews setState会render()一次
 //getCollection ajax数据返回的时候 setState又会render()一次 这几次setState相差时间太长所以各自render
-    initMyPage(user_id, previewsData, previewsName){
+    initMyPage(user_id, collection_id, previewsName){
         //console.log(["previewsData",previewsData,user_id])
-        this.getPreviews(previewsData);
+        this.getPreviews({
+            user_id,
+            collection_id
+        });
         $.post(`${cfg.url}/api/getCollection`, {
             user_id
         })
@@ -255,7 +258,11 @@ export default class Frame extends React.Component{
 
                 </Route>
 
-                <Route exact path="/article" component={Article}>
+                <Route exact path="/article"  render={
+                    (props)=>(
+                        <Article {...{myInfo}}> </Article>
+                    )
+                }>
 
                 </Route>
             </div>

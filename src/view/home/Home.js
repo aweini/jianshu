@@ -47,7 +47,7 @@ export default class Home extends React.Component{
     collectionClick(collection_id,collection_name, userInfo){
         let {history, initMyPage} = this.props;
         history.push('/my_page',{userInfo});
-        initMyPage(userInfo.user_id, {collection_id}, collection_name);
+        initMyPage(userInfo.user_id, collection_id, collection_name);
     }
 
     render(){

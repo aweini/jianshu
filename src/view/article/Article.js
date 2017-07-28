@@ -13,6 +13,13 @@ class Article extends React.Component{
                 user_name,
                 avatar,
                 user_intro} = this.props.location.state;
+        let {myInfo} = this.props;
+        let isMe = false;
+        if(myInfo){
+            if(myInfo.user_id == user_id){
+                isMe = true;
+            }
+        }
         add_time = new Date(add_time).toLocaleString();
         return (<div className={`ui container ${S.articleBox}`}>
            <h2 className="ui center aligned header">
@@ -26,6 +33,12 @@ class Article extends React.Component{
            <div className="ui raised segment">
                {article_content}
            </div>
+
+           {isMe?(<div className="ui button tiny basic floated">
+                    <i className="icon write"></i>
+                        编辑
+                </div>
+               ):null}
         </div>)
     }
 }

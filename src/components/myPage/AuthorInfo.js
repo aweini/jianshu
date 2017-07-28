@@ -7,7 +7,7 @@ export default function AuthorInfo(props){
     function authorInfoPage(e){
         e.preventDefault();
         e.stopPropagation();
-        initMyPage(user_id,{user_id:user_id},"所有文章")
+        initMyPage(user_id,"","所有文章")
     }
 
     return (

@@ -20,7 +20,7 @@ export default class MyPage extends React.Component{
     notebooksClick(collection_id, collection_name, userInfo){
         let {initMyPage} = this.props;
         console.log(["mypage collection_id",collection_id])
-        initMyPage(userInfo.user_id, {collection_id}, collection_name);
+        initMyPage(userInfo.user_id, collection_id, collection_name);
     }
     
     render(){
