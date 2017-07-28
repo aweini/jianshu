@@ -22,7 +22,7 @@ export default class Home extends React.Component{
                 console.log("getPreview res");
                 console.log(res);
                 res.data.map((el,index)=>{
-                    el.user.avatar = cfg.url + el.user.avatar;
+                    el.user.avatar = cfg.url_dest + el.user.avatar;
                    // el.user.avatar = `http://api.noods.me${el.user.avatar}`
                 })
                 this.setState({
@@ -34,7 +34,7 @@ export default class Home extends React.Component{
         .done(res=>{
             if(res.code==0){
                 res.data.map((el,index)=>{
-                    el.avatar = cfg.url + el.avatar;
+                    el.avatar = cfg.url_dest + el.avatar;
                     //el.avatar = `http://api.noods.me${el.avatar}`
                 })
                 this.setState({
@@ -63,7 +63,9 @@ export default class Home extends React.Component{
                  <div className="column four wide">
                     <Recommend {...{authors,initMyPage}}></Recommend>
                 </div>
+                
             </div>
+            
         );
     }
 

@@ -6,11 +6,15 @@ var mongoose = require('mongoose');
 //用户的表结构
 
 module.exports = new mongoose.Schema({
-    username: String,
+    user_name: String,
     password: String,
     avatar: {
         type: String,
         default: "/backend/assets/images/cat1.jpg"
+    },
+    user_intro: {
+        type: String,
+        default: "暂无简介"
     }
 });
 

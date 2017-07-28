@@ -20,7 +20,7 @@ module.exports = new mongoose.Schema({
         ref: 'Collection'
     },
     //添加时间
-    addTime: {
+    add_time: {
         type: Date,
         default: new Date()
     },

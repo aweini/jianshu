@@ -8,6 +8,7 @@ import SignIn from 'user/SignIn';
 import SignUp from 'user/SignUp';
 import MyPage from 'user/MyPage';
 import Write from 'write/Write';
+import Article from 'article/Article';
 import cfg from 'config/config.json';
 
 //有route的路有页面 this.props里有history location match 等其他属性，其中history里有push函数 location等等
@@ -104,7 +105,7 @@ export default class Frame extends React.Component{
     }
 
     logout(){
-        $.post(`${cfg.url}/logout`)
+        $.post(`${cfg.url}/api/logout`)
         .done((res)=>{
             if(res.code==0){
                this.initMyInfo(null);
@@ -118,7 +119,7 @@ export default class Frame extends React.Component{
         .done((res)=>{
             if(res.code==0){
                 // res.data.user_id = res.data.id;
-                // res.data.user_name = res.data.username;
+                // res.data.user_name = res.data.user_name;
             }
             this.initMyInfo(res.data);
         })
@@ -251,6 +252,10 @@ export default class Frame extends React.Component{
                         <Write {...{myInfo,collections,updataCollection}}></Write>
                     )
                 }>
+
+                </Route>
+
+                <Route exact path="/article" component={Article}>
 
                 </Route>
             </div>

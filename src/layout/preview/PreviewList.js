@@ -8,16 +8,15 @@ export default function PreviewList(props){
     //id: article_id,  id取别名为article_id
     previews = previews.map((el , index)=>{
         let {
-            id: article_id, 
-            article_title, createdAt,
-            preview: previewContent,
-            collection_name,
-            user_id,
-            collection_id,
-            user
+            _id: article_id, 
+            article_title, add_time,
+            article_content,
+            user,
+            the_collection
         } = el;
         
-        let {avatar ,user_name, user_intro} = user;
+        let {avatar ,user_name, user_intro,_id: user_id} = user;
+        let {collection_name, _id: collection_id} = the_collection;
 
         let collection = function(e){
             e.preventDefault();
@@ -29,13 +28,12 @@ export default function PreviewList(props){
             <Preview {...{
                 article_id,
                 article_title,
-                previewContent,
                 user_id,
                 user_name,
-                createdAt,
+                add_time,
                 avatar,
                 user_intro,
-                initMyPage
+                initMyPage,article_content
             }}
             key={index}
             >

@@ -21,10 +21,10 @@ router.use(function(req, res, next){
 
 //注册
 router.post('/register', function(req, res, next){
-    var username = req.body.username;
+    var user_name = req.body.user_name;
     var password = req.body.password;
 
-    if(username==""){
+    if(user_name==""){
         responseData.code = "1";
         responseData.msg = "用户不能为空";
         res.json(responseData);
@@ -34,7 +34,7 @@ router.post('/register', function(req, res, next){
 
     //用户是否已经注册 数据库操作
     User.findOne({
-        username: username
+        user_name: user_name
     }).then(function(userInfo){
         if(userInfo){
             responseData.code = "4";
@@ -44,26 +44,26 @@ router.post('/register', function(req, res, next){
         }else{
             //数据库每一条数据记录就是一个对象  通过操作model对象操作数据库
             var user = new User({
-                username: username,
+                user_name: user_name,
                 password: password
             });
             return user.save();
         }
     }).then(function(newUserInfo){
         //cookie里不能有汉字,汉字需要编码
-        newUserInfo.username = encodeURI(newUserInfo.username);
+        newUserInfo.user_name = encodeURI(newUserInfo.user_name);
         // console.log(newUserInfo);
         // console.dir(newUserInfo);
         responseData.data = {
-            avatar: '',
+            avatar: newUserInfo.avatar,
             user_id: newUserInfo._doc._id,
-            user_name: newUserInfo._doc.username,
-            user_intro: ''
+            user_name: newUserInfo._doc.user_name,
+            user_intro: newUserInfo.user_intro
         }
         responseData.msg = "用户注册成功";
         req.cookies.set("userInfo",JSON.stringify({
             user_id: newUserInfo._doc._id,
-            user_name: newUserInfo._doc.username
+            user_name: newUserInfo._doc.user_name
         }));
         res.json(responseData);
     })
@@ -73,17 +73,17 @@ router.post('/register', function(req, res, next){
 //登陆
 
 router.post('/login', function(req, res){
-    var username = req.body.username;
+    var user_name = req.body.user_name;
     var password = req.body.password;
 
-    if(username==""||password==""){
+    if(user_name==""||password==""){
         responseData.code= "1";
         responseData.msg = "用户名和密码不能为空";
         res.json(responseData);
         return;
     }
     User.findOne({
-        username: username,
+        user_name: user_name,
         password: password
     }).then(function(userInfo){
         if(!userInfo){
@@ -97,14 +97,15 @@ router.post('/login', function(req, res){
         responseData.msg = "用户登录成功";
         responseData.data = {
             user_id : userInfo._id,
-            user_name : userInfo.username
+            user_name : userInfo.user_name,
+            avatar: userInfo.avatar
         };
         //请求返回的时候,后端像浏览器发送cookie,浏览器保存cookie,每次请求的时候会把cookie自动放在http 头部信息里提交给后端
         //jsonp refer 域名 通过手动ajax 添加至头部再提交给后端
-        userInfo.username = encodeURI(userInfo.username)
+        userInfo.user_name = encodeURI(userInfo.user_name)
         req.cookies.set("userInfo", JSON.stringify({
             user_id : userInfo._id,
-            user_name : userInfo.username
+            user_name : userInfo.user_name
         }));
         res.json(responseData);
     })
@@ -121,16 +122,20 @@ router.post('/autoLogin', function(req, res){
         req.userInfo.user_name = decodeURI(req.userInfo.user_name)
         if(cookiesUserInfo){
             User.findOne({
-                username: req.userInfo.user_name
+                user_name: req.userInfo.user_name
             }).then(function(userInfo){
                 if(userInfo){
                     responseData.msg = "自动登录成功";
                     responseData.data = {
                         user_id : userInfo._id,
-                        user_name : userInfo.username
+                        user_name : userInfo.user_name,
+                        avatar: userInfo.avatar
                     };  
                     res.json(responseData);
                 }
+            }).then(function(){
+                responseData.msg="尚未登陆";
+                res.json(responseData);
             })
         }
     }else{
@@ -142,8 +147,9 @@ router.post('/autoLogin', function(req, res){
 })
 
 //退出
-router.get('/logout', function(req, res){
+router.post('/logout', function(req, res){
     req.cookies.set("userInfo", null);
+    responseData.msg = "退出登录成功";
     res.json(responseData);
 
 });
@@ -207,7 +213,7 @@ router.post("/getPreview", function(req, res){
     console.log("获取文章列表");
     console.log(user_id);
     if(user_id){
-        Article.find({user: user_id}).populate('user').then(function(articles){
+        Article.find({user: user_id}).populate(['user','the_collection']).then(function(articles){
             if(articles){
                 responseData.data = articles;
                 responseData.msg = "查找文章成功";
@@ -219,7 +225,7 @@ router.post("/getPreview", function(req, res){
         })
     }else{
        
-         Article.find().populate('user').then(function(articles){
+         Article.find().populate(['user','the_collection']).then(function(articles){
             if(articles){
                 responseData.data = articles;
                 responseData.msg = "查找文章成功";

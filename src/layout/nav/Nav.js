@@ -39,7 +39,7 @@ export default class Nav extends React.Component{
         e.preventDefault();
         e.stopPropagation();
         let {initMyPage, history, myInfo} = this.props;
-        let {id:user_id, username:user_name, avatar, user_intro} = myInfo;
+        let {id:user_id, user_name:user_name, avatar, user_intro} = myInfo;
         console.log('initMyPageClick');
         console.log(myInfo);
         history.push('/my_page',{
@@ -63,7 +63,7 @@ export default class Nav extends React.Component{
             userLink=(
                 <NavLink to="/my_page" className={`${S.avatar} item`} activeClassName="active" onClick={initMyPageClick}>
                     <img src={myInfo.avatar} className="ui image avatar" alt=""/>
-                    <span>{myInfo.username}</span>
+                    <span>{myInfo.user_name}</span>
                     <div className={S.dropDown}>
                         <p onClick={logout}>注销</p>
                     </div>

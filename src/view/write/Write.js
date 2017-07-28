@@ -66,9 +66,10 @@ export default class Write extends React.Component{
                 if(res.code==0){
                      console.log("collections res.data");
                      console.log(res.data);
-                    this.setState({
-                        collections: res.data
-                    })
+                     this.props.updataCollection(res.data);
+                    // this.setState({
+                    //     collections: res.data
+                    // })
                 }
             })
         }
@@ -105,10 +106,11 @@ export default class Write extends React.Component{
     render(){
 
         let {changeTitle, changeClt, changeContent,addCollection,collectionName,onsubmit} = this;
-        let {collections,titleVal,cltVal,contentVal} = this.state;
-        if(!collections){
-            collections = this.props.collections;
-        }
+        let {titleVal,cltVal,contentVal} = this.state;
+        let {collections}  = this.props;
+       // if(!collections){
+           // collections = this.props.collections;
+       // }
         collections = collections.map((el,index)=>{
             collectionName[el._id] = el.collection_name;
             return(

@@ -5,7 +5,7 @@ export default class SignUpPanel extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            username:'',
+            user_name:'',
             nameErr:'',
             password: '',
             passwordErr: '',
@@ -14,7 +14,7 @@ export default class SignUpPanel extends React.Component{
         }
 
         this.validator = new Validation();
-        this.validator.addByValue('username',[
+        this.validator.addByValue('user_name',[
             {strategy: 'isEmpty',errorMsg: '用户名不能为空' },
             {strategy: 'hasSpace', errorMsg: '用户名不能有空格'},
             {strategy: 'maxLength:6', errorMsg: '最长为6'}
@@ -36,9 +36,9 @@ export default class SignUpPanel extends React.Component{
 
     nameChange(ev){
         let {target} = ev;
-        let nameErr = this.validator.valiOneByValue('username',target.value)
+        let nameErr = this.validator.valiOneByValue('user_name',target.value)
         this.setState({
-            username: target.value,
+            user_name: target.value,
             nameErr
         });
         
@@ -71,8 +71,8 @@ export default class SignUpPanel extends React.Component{
         ev.preventDefault();
         ev.stopPropagation();
         let {nameDom, passwordDom, cfpasswordDom} = this.refs;
-        let {username, password, cfPassword} = this.state;
-        let nameErr = this.validator.valiOneByValue("username",username);
+        let {user_name, password, cfPassword} = this.state;
+        let nameErr = this.validator.valiOneByValue("user_name",user_name);
         let passwordErr = this.validator.valiOneByValue("password",password);
         let cfPasswordErr = password== cfPassword?"":"两次输入密码不一致";
         this.setState({
@@ -83,14 +83,14 @@ export default class SignUpPanel extends React.Component{
         //console.log(!nameErr&&!passwordErr&&!cfPasswordErr);
         if(!nameErr&&!passwordErr&&!cfPasswordErr){
             this.props.signUpAjax({
-                username, password, cfPassword
+                user_name, password, cfPassword
             })
         }
     }
 
     render(){
         let {nameChange, passwordChange, cfPasswordChange,submitRegister} = this;
-        let {username, nameErr, password, passwordErr, cfPassword, cfPasswordErr} = this.state;
+        let {user_name, nameErr, password, passwordErr, cfPassword, cfPasswordErr} = this.state;
         let {signUpMsg} = this.props;
 
         let nameErrMsg = nameErr? <p className={S.err}>{nameErr}</p>:"";
@@ -122,7 +122,7 @@ export default class SignUpPanel extends React.Component{
                 <form className="ui form">
                     <div className="field">
                         <input type="text" placeholder="用户名" ref="nameDom"
-                        value={username}
+                        value={user_name}
                         onChange={nameChange}
                         />
                         {nameErrMsg}

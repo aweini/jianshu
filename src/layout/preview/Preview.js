@@ -7,6 +7,7 @@ class Preview extends React.Component{
         this.initMyPageClick = this.initMyPageClick.bind(this);
         //console.log('preview');
         //console.log(this.props);
+        this.showArticle = this.showArticle.bind(this);
     };
     initMyPageClick(e){
         e.preventDefault();
@@ -14,10 +15,10 @@ class Preview extends React.Component{
         let {
             article_id,
             article_title,
-            previewContent,
+            article_content,
             user_id,
             user_name,
-            createdAt,
+            add_time,
             avatar,
             user_intro,
             initMyPage,
@@ -34,14 +35,36 @@ class Preview extends React.Component{
         initMyPage(user_id,{user_id:user_id},"我的所有文章");
     }
 
+    showArticle(e){
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("showArticle");
+        let {article_id,article_content,article_title,add_time,history,user_id,
+                user_name,
+                avatar,
+                user_intro} = this.props;
+        history.push('/article',
+            {article_id,
+            article_title,
+            article_content,
+            add_time,
+            user_id,
+            user_name,
+            avatar,
+            user_intro
+            }
+        )
+    }
+
+
     render(){
         let {
             article_id,
             article_title,
-            previewContent,
+            article_content,
             user_id,
             user_name,
-            createdAt,
+            add_time,
             avatar,
             user_intro,
             initMyPage,
@@ -49,9 +72,9 @@ class Preview extends React.Component{
             children
         } = this.props;
 
-       createdAt = new Date(createdAt).toLocaleString();
+       add_time = new Date(add_time).toLocaleString();
         
-        let {initMyPageClick} = this;
+        let {initMyPageClick, showArticle} = this;
         return (
         <div className={`${S.note}`}>
             <div className="ui divider hidden"></div>
@@ -64,12 +87,12 @@ class Preview extends React.Component{
                     </Link>
                     <div className={`${S.name}`}>
                         <Link to="/">{user_name}</Link>
-                        <span className="time">{createdAt}</span>
+                        <span className="time">{add_time}</span>
                     </div>
                 </div>
-                <Link to="/" className={$.title}>{article_title}</Link>
-                <p className={S.abstract}>
-                    {previewContent}
+                <Link to="/article" className={$.title} onClick={showArticle}>{article_title}</Link>
+                <p className={`${S.abstract} ${S.ellipsis}`} onClick={showArticle}>
+                    {article_content}
                 </p>
                 <div className={S.meta}>
                     {children}

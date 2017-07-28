@@ -6,13 +6,13 @@ export default class SignInPanel extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            username: '',
+            user_name: '',
             password: '',
             nameErr: false,
             passwordErr: false
         }
         this.validator = new Validation();
-        this.validator.addByValue('username',[
+        this.validator.addByValue('user_name',[
             {strategy: 'isEmpty', errorMsg: '用户名不能为空'},
             {strategy: 'hasSpace', errorMsg: '用户名不能有空格'},
             {strategy: 'maxLength:6', errorMsg: '最长为6'}
@@ -30,9 +30,9 @@ export default class SignInPanel extends React.Component{
     }
     nameChange(ev){
         let {target} = ev;
-        let msg = this.validator.valiOneByValue('username', target.value);
+        let msg = this.validator.valiOneByValue('user_name', target.value);
         this.setState({
-            username: target.value,
+            user_name: target.value,
             nameErr: msg
         })
     }
@@ -51,16 +51,16 @@ export default class SignInPanel extends React.Component{
         let {nameDom, passwordDom} = this.refs;
         let {signInAjax} = this.props;
         //没有填写过用户名密码，所以要验证
-        let nameErr = this.validator.valiOneByValue('username', nameDom.value);
+        let nameErr = this.validator.valiOneByValue('user_name', nameDom.value);
         let passwordErr = this.validator.valiOneByValue('password', passwordDom.value);
          this.setState({
                 nameErr,
                 passwordErr
             })
         if(nameErr!==''&&passwordErr!==''){
-            //用state里的username 会更快
+            //用state里的user_name 会更快
             signInAjax({
-                username:nameDom.value,
+                user_name:nameDom.value,
                 password:passwordDom.value
             })
         }
@@ -71,7 +71,7 @@ export default class SignInPanel extends React.Component{
     render(){
 
         let {nameChange, passwordChange, submitLogin} = this;
-        let {username, password, nameErr, passwordErr} = this.state;
+        let {user_name, password, nameErr, passwordErr} = this.state;
         let nameErrMsg = nameErr?(
             <p className={S.err}>{nameErr}</p>
         ) : null;
@@ -99,7 +99,7 @@ export default class SignInPanel extends React.Component{
                             type="text" 
                             placeholder="用户名" 
                             ref="nameDom"
-                            value = {username}
+                            value = {user_name}
                             onChange = {nameChange}
                         />
                         {nameErrMsg}
