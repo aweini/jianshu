@@ -112,9 +112,9 @@ export default class Write extends React.Component{
            // collections = this.props.collections;
        // }
         collections = collections.map((el,index)=>{
-            collectionName[el._id] = el.collection_name;
+            collectionName[el.collection_id] = el.collection_name;
             return(
-                <div className="item" key={index} data-value={el._id}>
+                <div className="item" key={index} data-value={el.collection_id}>
                     {el.collection_name}
                 </div>
             )

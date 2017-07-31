@@ -8,19 +8,20 @@ export default function PreviewList(props){
     //id: article_id,  id取别名为article_id
     previews = previews.map((el , index)=>{
         let {
-            _id: article_id, 
+            article_id, 
             article_title, add_time,
             article_content,
             user,
             the_collection
         } = el;
         
-        let {avatar ,user_name, user_intro,_id: user_id} = user;
-        let {collection_name, _id: collection_id} = the_collection;
+        let {avatar ,user_name, user_intro, user_id} = user;
+        let {collection_name, collection_id} = the_collection;
 
         let collection = function(e){
             e.preventDefault();
             e.stopPropagation();
+            console.log(user);
             collectionClick(collection_id, collection_name,user);
         }
 

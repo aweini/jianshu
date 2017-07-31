@@ -34,6 +34,7 @@ module.exports = new mongoose.Schema({
     article_content:{
         type: String,
         default: ''
-    }
+    },
+    article_id: String
 });
 

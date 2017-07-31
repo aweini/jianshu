@@ -11,6 +11,7 @@ module.exports = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    collection_name: String
+    collection_name: String,
+    collection_id: String
 });
 

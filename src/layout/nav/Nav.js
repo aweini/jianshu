@@ -39,7 +39,7 @@ export default class Nav extends React.Component{
         e.preventDefault();
         e.stopPropagation();
         let {initMyPage, history, myInfo} = this.props;
-        let {id:user_id, user_name:user_name, avatar, user_intro} = myInfo;
+        let {user_id, user_name:user_name, avatar, user_intro} = myInfo;
         console.log('initMyPageClick');
         console.log(myInfo);
         history.push('/my_page',{
@@ -80,7 +80,7 @@ export default class Nav extends React.Component{
             <div className="ui inverted segment">
                 <div className={`ui fixed secondary pointing menu ${S.nav}`}>
                     <div className="ui container">
-                        <Link  to="/" className="item">Noods</Link>
+                        <Link  to="/" className="item"></Link>
                         <NavLink exact  to="/" className="item" activeClassName="active">首页 </NavLink>
                         <div className="menu right">
                             {userLink}

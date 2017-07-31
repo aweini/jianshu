@@ -165,7 +165,7 @@ export default class Frame extends React.Component{
 //后续getPreviews setState会render()一次
 //getCollection ajax数据返回的时候 setState又会render()一次 这几次setState相差时间太长所以各自render
     initMyPage(user_id, collection_id, previewsName){
-        //console.log(["previewsData",previewsData,user_id])
+        console.log("initMyPage", user_id,collection_id)
         this.getPreviews({
             user_id,
             collection_id

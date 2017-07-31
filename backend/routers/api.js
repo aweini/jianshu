@@ -158,12 +158,22 @@ router.post("/getCollection", function(req, res){
     var user_id = req.body.user_id;
     if(user_id){
         Collection.find({user: user_id}).then(function(userCollection){
+            if(userCollection){
+                userCollection.forEach(function(item){
+                    item.collection_id = item._id;
+                })
+            }
             responseData.msg="查找用户分类成功";
             responseData.data = userCollection;
             res.json(responseData);
         })
     }else{
         Collection.find().then(function(Collection){
+            if(Collection){
+                Collection.forEach(function(item){
+                    item.collection_id = item._id;
+                })
+            }
             responseData.msg="查找所有分类成功";
             responseData.data = Collection;
             res.json(responseData)
@@ -210,23 +220,53 @@ router.post("/addCollection", function(req, res){
 //获取文章列表
 router.post("/getPreview", function(req, res){
     let user_id = req.body.user_id;
+    let collection_id = req.body.collection_id;
     console.log("获取文章列表");
     console.log(user_id);
     if(user_id){
-        Article.find({user: user_id}).populate(['user','the_collection']).then(function(articles){
-            if(articles){
-                responseData.data = articles;
-                responseData.msg = "查找文章成功";
-            }else{
-                responseData.data = [];
-                responseData.msg = "暂无文章";
-            }
-            res.json(responseData);
-        })
+        if(collection_id){
+            Article.find({user: user_id, the_collection: collection_id}).populate(['user','the_collection']).then(function(articles){
+                if(articles){
+                    articles.forEach(function(item, index){
+                        item.user.user_id = item.user._id;
+                        item.the_collection.collection_id = item.the_collection._id;
+                        item.article_id = item.id;
+                    })
+                    responseData.data = articles;
+                    responseData.msg = "查找文章成功";
+                }else{
+                    responseData.data = [];
+                    responseData.msg = "暂无文章";
+                }
+                res.json(responseData);
+            });
+        }else{
+            Article.find({user: user_id}).populate(['user','the_collection']).then(function(articles){
+                if(articles){
+                    articles.forEach(function(item, index){
+                        item.user.user_id = item.user._id;
+                        item.the_collection.collection_id = item.the_collection._id;
+                        item.article_id = item.id;
+                    })
+                    responseData.data = articles;
+                    responseData.msg = "查找文章成功";
+                }else{
+                    responseData.data = [];
+                    responseData.msg = "暂无文章";
+                }
+                res.json(responseData);
+            });
+        }
+       
     }else{
        
          Article.find().populate(['user','the_collection']).then(function(articles){
             if(articles){
+                articles.forEach(function(item, index){
+                    item.user.user_id = item.user._id;
+                    item.the_collection.collection_id = item.the_collection._id;
+                    item.article_id = item.id;
+                })
                 responseData.data = articles;
                 responseData.msg = "查找文章成功";
             }else{
@@ -244,6 +284,9 @@ router.post("/getPreview", function(req, res){
 router.post("/getAuthor", function(req, res){
     User.find().then(function(users){
         if(users){
+            users.forEach(function(item, index){
+                item.user_id = item._id;
+            })
             responseData.msg = "查找用户列表成功";
             responseData.data = users;
         }else{

@@ -17,7 +17,8 @@ export default class Aside extends React.Component{
     notebooksClick(collection_id, collection_name, userInfo){
         let {notebooksClick} = this.props;
         notebooksClick(collection_id, collection_name, userInfo);
-        console.log(collection_id);
+        console.log("notebooksClick");
+        console.log(collection_id,collection_name,userInfo);
     }
     editMe(e){
        // e.preventDefault();
@@ -67,7 +68,7 @@ export default class Aside extends React.Component{
         let {inEdit, editVal} = this.state;
         user_intro = user_intro?user_intro:"用户暂时没写自我介绍哦";
         notebooks = notebooks.map((el, index)=>{
-            let {collection_name,id} = el;
+            let {collection_name,collection_id } = el;
             return (
                  <div
                     className="item"
@@ -75,7 +76,7 @@ export default class Aside extends React.Component{
                     onClick={(e)=>{
                         e.preventDefault();
                         e.stopPropagation();
-                        notebooksClick(id, collection_name, userInfo)
+                        notebooksClick(collection_id, collection_name, userInfo)
                     }}
                 >
                     <i className="book icon"></i>

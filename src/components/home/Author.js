@@ -3,8 +3,7 @@ import {Link, withRouter} from 'react-router-dom'
 function Author(props){
     let {user, initMyPage,history} = props;
     let userInfo = user;
-    userInfo.user_id = userInfo.id;
-    let {user_name, avatar, id: user_id} = user;
+    let {user_name, avatar, user_id} = user;
 
     let authorInfoPage = function(e){
         e.preventDefault();

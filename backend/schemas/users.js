@@ -15,6 +15,7 @@ module.exports = new mongoose.Schema({
     user_intro: {
         type: String,
         default: "暂无简介"
-    }
+    },
+    user_id: String
 });
 
