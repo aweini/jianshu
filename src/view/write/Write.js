@@ -1,7 +1,8 @@
 import cfg from 'config/config.json';
 import S from './style.scss';
+import {withRouter} from 'react-router-dom'
 
-export default class Write extends React.Component{
+class Write extends React.Component{
     constructor(props){
         super(props)
         //let {myInfo} = this.props;//刷新就没了
@@ -85,6 +86,9 @@ export default class Write extends React.Component{
         e.stopPropagation();
         let {value: cltId} = this.refs.cltIdInput;
         let {titleVal, contentVal} = this.state;
+        let {history,myInfo} = this.props;
+        console.log('history');
+        console.log(history);
         let {user_id} = this.props.myInfo;
         let {collectionName} = this;
         $.post(`${cfg.url}/api/addArticle`,{
@@ -99,6 +103,18 @@ export default class Write extends React.Component{
                     titleVal:'',
                     contentVal: ''
                 });
+                history.push('/article', {
+                    article_id: res.data.article_id,
+                    article_title: res.data.article_title,
+                    article_content:  res.data.article_content,
+                    add_time : res.data.add_time,
+                    user_id: myInfo.user_id,
+                    user_name: myInfo.user_name,
+                    avatar: myInfo.avatar,
+                    user_intro: myInfo.user_intro
+                });
+
+                
             }
         })
     }
@@ -187,3 +203,4 @@ export default class Write extends React.Component{
         )
     }
 }
+export default Write;

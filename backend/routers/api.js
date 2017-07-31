@@ -323,6 +323,8 @@ router.post("/addArticle", function(req, res){
         }
     }).then(function(newArticle){
         if(newArticle){
+            newArticle.article_id = newArticle._id;
+            responseData.data = newArticle;
             responseData.msg = "创建文章成功";
             res.json(responseData);
         }

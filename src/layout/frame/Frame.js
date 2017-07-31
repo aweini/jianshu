@@ -252,7 +252,7 @@ export default class Frame extends React.Component{
 
                 <Route exact path="/write" render={
                     (props)=>(
-                        <Write {...{myInfo,collections,updataCollection}}></Write>
+                        <Write {...{myInfo,collections,updataCollection}} {...props}></Write>
                     )
                 }>
 
