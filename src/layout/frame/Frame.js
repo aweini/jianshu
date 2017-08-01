@@ -49,7 +49,7 @@ export default class Frame extends React.Component{
 
     initMyInfo(myInfo){
         if(myInfo){
-            myInfo.avatar = cfg.url_dest+ myInfo.avatar;
+           // myInfo.avatar = cfg.url_dest+ myInfo.avatar;
             myInfo.user_intro = myInfo.user_intro?myInfo.user_intro:'没有自我介绍';
         }
         this.setState({
@@ -153,7 +153,7 @@ export default class Frame extends React.Component{
         .done(({code, data})=>{
             if(code==0){
                 data.map((el,index)=>{
-                    el.user.avatar = cfg.url_dest + el.user.avatar;
+                   // el.user.avatar = cfg.url_dest + el.user.avatar;
                 })
                 //console.log('getPreviews');
                 this.setState({
@@ -186,9 +186,10 @@ export default class Frame extends React.Component{
         })
     }
 
-    upDateMyInfo(user_intro){
+    upDateMyInfo(user_intro,avatar){
         let {myInfo} = this.state;
         myInfo.user_intro = user_intro;
+        myInfo.avatar = avatar;
         this.setState({
             myInfo
         })

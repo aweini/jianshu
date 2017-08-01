@@ -44,12 +44,13 @@ export default class Aside extends React.Component{
         e.stopPropagation();
         let {editVal} = this.state;
         let { userInfo:{user_id}, upDateMyInfo} = this.props;
-        $.post(`${cfg.url}/editIntro`,{user_intro: editVal, user_id})
+        let avatar = this.refs.userImg.src;
+        $.post(`${cfg.url}/api/editUserInfo`,{user_intro: editVal, avatar, user_id})
         .done((res)=>{
             if(res.code==0){
                 console.log('editVal');
                 console.log(editVal);
-                upDateMyInfo(editVal);
+                upDateMyInfo(editVal, avatar);
                 this.setState({
                     inEdit: false
                 })
@@ -66,11 +67,17 @@ export default class Aside extends React.Component{
 
    uploadImg(e){
      var that = this;
+     console.log(e.target.files);
      if(e.target.files&&e.target.files[0]){
-         var reader = new FileReader();
          var destFile = e.target.files[0];
+         if(destFile.type.indexOf("image")<0){
+             alert("请上传图片");
+         }
+         var reader = new FileReader();
+         
          reader.readAsDataURL(destFile);
          reader.onload = function(e){
+             console.log(e);
              that.refs.userImg.src =  e.target.result;
          }
      }

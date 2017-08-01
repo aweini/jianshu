@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({extended: true}));//以后req里会封装一个bo
 var cookies = require("cookies");
 //用中间件的方式 用户访问站点都会走这个中间件
 var User = require('./backend/models/User');
-
+app.use(bodyParser.json({limit : '1000kb'}));
 //中间件
 app.use(function(req, res, next){
     req.cookies = new cookies(req, res);

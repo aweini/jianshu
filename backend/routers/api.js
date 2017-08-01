@@ -70,6 +70,30 @@ router.post('/register', function(req, res, next){
 
 });
 
+//更新用户信息
+router.post('/editUserInfo', function(req, res){
+    var user_id = req.body.user_id;
+    var user_intro = req.body.user_intro;
+    var avatar = req.body.avatar;
+
+    User.update({_id: user_id},{
+        user_intro,
+        avatar
+    }).then(function(user){
+        if(user){
+            User.findOne({
+                _id: user_id
+            }).then(function(theUser){
+                responseData.data = theUser;
+                res.json(responseData);
+            })
+        }
+        
+    })
+
+    
+})
+
 //登陆
 
 router.post('/login', function(req, res){
@@ -210,6 +234,9 @@ router.post("/addCollection", function(req, res){
             Collection.find({
                 user: user_id
             }).then(function(collections){
+                collections.forEach(function(item){
+                    item.collection_id = item._id;
+                })
                 responseData.data = collections
                 res.json(responseData);
             })

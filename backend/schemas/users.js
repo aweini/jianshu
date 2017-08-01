@@ -2,7 +2,6 @@
  * Created by mahong on 17/5/24.
  */
 var mongoose = require('mongoose');
-
 //用户的表结构
 
 module.exports = new mongoose.Schema({
@@ -10,7 +9,7 @@ module.exports = new mongoose.Schema({
     password: String,
     avatar: {
         type: String,
-        default: "/backend/assets/images/cat1.jpg"
+        default: "http://localhost:9000/backend/assets/images/user.png"
     },
     user_intro: {
         type: String,
