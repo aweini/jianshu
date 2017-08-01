@@ -6,14 +6,24 @@ class Article extends React.Component{
     constructor(props){
         super(props);
         console.log(this.props.location);
+        this.editArticle = this.editArticle.bind(this);
     }
-
+    editArticle(ev){
+        let { history } = this.props;
+        let { article_id } = this.props.location.state;
+        ev.preventDefault();
+        ev.stopPropagation();
+        history.push('/edit',{
+            article_id
+        })
+    }
     render(){
         let {article_title, article_id, article_content, add_time,user_id,
                 user_name,
                 avatar,
                 user_intro} = this.props.location.state;
         let {myInfo} = this.props;
+        let {editArticle} = this;
         let isMe = false;
         if(myInfo){
             if(myInfo.user_id == user_id){
@@ -34,7 +44,7 @@ class Article extends React.Component{
                {article_content}
            </div>
 
-           {isMe?(<div className="ui button tiny basic floated">
+           {isMe?(<div className="ui button tiny basic floated" onClick={editArticle}>
                     <i className="icon write"></i>
                         编辑
                 </div>

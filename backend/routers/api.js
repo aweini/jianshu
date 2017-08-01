@@ -332,6 +332,61 @@ router.post("/addArticle", function(req, res){
     
 })
 
+router.post("/getArticle", function(req, res){
+    var article_id = req.body.article_id;
+    Article.findOne({
+        _id: article_id
+    }).populate('the_collection').then(function(article){
+        if(article){
+            article.article_id = article._id;
+            article.the_collection.collection_id = article.the_collection._id;
+            responseData.data = article;
+            res.json(responseData);
+        }
+    })
+
+});
+
+router.post("/editArticle", function(req, res){
+    var article_title = req.body.article_title;
+    var article_content = req.body.article_content;
+    var article_id = req.body.article_id; 
+    var collection_id = req.body.collection_id;
+    var user_id = req.body.user_id;
+    // var collection_name = req.body.collection_name;
+
+    Article.findOne({
+        _id : {$ne: article_id},
+        article_title: article_title,
+        user: user_id
+    }).then(function(article){
+        if(article){
+           responseData.msg="文章名已存在"
+           responseData.code = "2";
+           res.json(responseData);
+        }else{
+          return Article.update({
+                _id: article_id
+           },{
+                article_title: article_title,
+                article_content: article_content,
+                the_collection: collection_id
+           })
+        }
+    }).then(function(editArticle){
+        if(editArticle){
+            Article.findOne({
+                _id: article_id
+            }).then(function(article){
+                 responseData.msg = "编辑文章成功";
+                 responseData.data = article;
+                 res.json(responseData);
+            })
+           
+        }
+    })
+    
+})
 
 
 

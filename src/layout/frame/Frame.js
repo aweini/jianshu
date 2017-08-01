@@ -9,6 +9,7 @@ import SignUp from 'user/SignUp';
 import MyPage from 'user/MyPage';
 import Write from 'write/Write';
 import Article from 'article/Article';
+import Edit from 'edit/Edit';
 import cfg from 'config/config.json';
 
 //有route的路有页面 this.props里有history location match 等其他属性，其中history里有push函数 location等等
@@ -213,7 +214,6 @@ export default class Frame extends React.Component{
                     (props)=>(
                         <Home {...{initMyPage}} {...props}></Home>
                     )
-                    
                 }></Route>
                 <Route exact path="/sign_in" render={
                     (props)=>(
@@ -224,7 +224,6 @@ export default class Frame extends React.Component{
 
                             </SignIn>
                         )
-                        
                     )
                 }></Route>
                 <Route exact path="/sign_up" render={
@@ -255,15 +254,20 @@ export default class Frame extends React.Component{
                         <Write {...{myInfo,collections,updataCollection}} {...props}></Write>
                     )
                 }>
-
                 </Route>
 
                 <Route exact path="/article"  render={
                     (props)=>(
-                        <Article {...{myInfo}}> </Article>
+                        <Article {...{myInfo}} {...props}> </Article>
                     )
                 }>
+                </Route>
 
+                <Route exact path="/edit"  render={
+                    (props)=>(
+                        <Edit {...{myInfo}} {...props}> </Edit>
+                    )
+                }>
                 </Route>
             </div>
             )

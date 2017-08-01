@@ -1,5 +1,6 @@
 import S from './style.scss';
 import cfg from 'config/config.json';
+import userImage from 'common/images/user.png'
 export default class Aside extends React.Component{
     constructor(props){
         super(props);
@@ -12,6 +13,7 @@ export default class Aside extends React.Component{
         this.cancelEdit = this.cancelEdit.bind(this);
         this.editDone = this.editDone.bind(this);
         this.editContent = this.editContent.bind(this);
+        this.uploadImg = this.uploadImg.bind(this);
     }
 
     notebooksClick(collection_id, collection_name, userInfo){
@@ -61,10 +63,23 @@ export default class Aside extends React.Component{
             editVal: ev.target.value
         })
     }
+
+   uploadImg(e){
+     var that = this;
+     if(e.target.files&&e.target.files[0]){
+         var reader = new FileReader();
+         var destFile = e.target.files[0];
+         reader.readAsDataURL(destFile);
+         reader.onload = function(e){
+             that.refs.userImg.src =  e.target.result;
+         }
+     }
+   }
+
     render(){
         let {userInfo, notebooks,isMe} = this.props;
         let {user_intro} = userInfo;
-        let {notebooksClick, editMe, cancelEdit, editDone, editContent} = this;
+        let {notebooksClick, editMe, cancelEdit, editDone, editContent, uploadImg} = this;
         let {inEdit, editVal} = this.state;
         user_intro = user_intro?user_intro:"用户暂时没写自我介绍哦";
         notebooks = notebooks.map((el, index)=>{
@@ -95,21 +110,21 @@ export default class Aside extends React.Component{
                 <div className="introduce">
                     <div className="title">
                         个人介绍
-                        {isMe?(
-                            <div className="ui button tiny basic floated" onClick={editMe}>
-                                <i className="icon write"></i>
-                                    编辑
-                            </div>
-                        ):null}
-                        <div className="ui divider hidden"></div>
-                       
-                       
+
                         {inEdit?(
                              <form
                                     action=""
                                     className="ui form"
                                     onSubmit={editDone}
                                 >
+                                    <div className={S.img_label}>
+                                        <img className={`ui medium circular image ${S.user_img}`} ref="userImg" src={userImage} />
+                                        <input type="file" className={S.img_input} onChange={(e)=>{
+                                            uploadImg(e)
+                                        }}/>
+                                        <div className={S.img_tip}>上传头像</div>
+                                    </div>
+                                    
                                     <div className="field">
                                         <textarea
                                             value={editVal}
@@ -128,6 +143,14 @@ export default class Aside extends React.Component{
                                     </button>
                                 </form>
                         ):(<p>{user_intro}</p>)}
+
+
+                        {isMe&&!inEdit?(
+                            <div className="ui button tiny basic floated" onClick={editMe}>
+                                <i className="icon write"></i>
+                                    编辑
+                            </div>
+                        ):null}
                         
                     </div>
                 </div>
