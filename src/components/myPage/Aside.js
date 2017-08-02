@@ -1,6 +1,7 @@
 import S from './style.scss';
 import cfg from 'config/config.json';
 import userImage from 'common/images/user.png'
+import 'common/util/resize.min.js'
 export default class Aside extends React.Component{
     constructor(props){
         super(props);
@@ -68,19 +69,36 @@ export default class Aside extends React.Component{
    uploadImg(e){
      var that = this;
      console.log(e.target.files);
-     if(e.target.files&&e.target.files[0]){
-         var destFile = e.target.files[0];
-         if(destFile.type.indexOf("image")<0){
-             alert("请上传图片");
-         }
-         var reader = new FileReader();
+    //  if(e.target.files&&e.target.files[0]){
+    //      var destFile = e.target.files[0];
+    //      if(destFile.type.indexOf("image")<0){
+    //          alert("请上传图片");
+    //      }
+    //      var reader = new FileReader();
          
-         reader.readAsDataURL(destFile);
-         reader.onload = function(e){
-             console.log(e);
-             that.refs.userImg.src =  e.target.result;
-         }
-     }
+    //      reader.readAsDataURL(destFile);
+    //      reader.onload = function(e){
+    //          console.log('e.target.result.length');
+    //          console.log(e.target.result.length);
+    //          that.refs.userImg.src =  e.target.result;
+    //      }
+    //  }
+    
+    
+    if(e.target.files&&e.target.files[0]){
+         canvasResize(e.target.files[0], {
+            crop: false,
+            quality: 0.9,
+            rotate: 0,
+            callback(baseStr) {
+             // console.log(baseStr)
+              console.log(baseStr.length)
+              that.refs.userImg.src =  baseStr;
+            }
+          })
+    }
+       
+
    }
 
     render(){
@@ -126,7 +144,7 @@ export default class Aside extends React.Component{
                                 >
                                     <div className={S.img_label}>
                                         <img className={`ui medium circular image ${S.user_img}`} ref="userImg" src={userImage} />
-                                        <input type="file" className={S.img_input} onChange={(e)=>{
+                                        <input id="imageUpload" type="file" className={S.img_input} onChange={(e)=>{
                                             uploadImg(e)
                                         }}/>
                                         <div className={S.img_tip}>上传头像</div>

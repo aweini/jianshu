@@ -30,8 +30,6 @@ router.post('/register', function(req, res, next){
         res.json(responseData);
         return ;
     }
-
-
     //用户是否已经注册 数据库操作
     User.findOne({
         user_name: user_name
@@ -53,12 +51,12 @@ router.post('/register', function(req, res, next){
         //cookie里不能有汉字,汉字需要编码
         newUserInfo.user_name = encodeURI(newUserInfo.user_name);
         // console.log(newUserInfo);
-        // console.dir(newUserInfo);
+         console.dir(newUserInfo);
         responseData.data = {
-            avatar: newUserInfo.avatar,
+            avatar: newUserInfo._doc.avatar,
             user_id: newUserInfo._doc._id,
             user_name: newUserInfo._doc.user_name,
-            user_intro: newUserInfo.user_intro
+            user_intro: newUserInfo._doc.user_intro
         }
         responseData.msg = "用户注册成功";
         req.cookies.set("userInfo",JSON.stringify({
@@ -122,7 +120,8 @@ router.post('/login', function(req, res){
         responseData.data = {
             user_id : userInfo._id,
             user_name : userInfo.user_name,
-            avatar: userInfo.avatar
+            avatar: userInfo.avatar,
+            user_intro: userInfo.user_intro
         };
         //请求返回的时候,后端像浏览器发送cookie,浏览器保存cookie,每次请求的时候会把cookie自动放在http 头部信息里提交给后端
         //jsonp refer 域名 通过手动ajax 添加至头部再提交给后端
@@ -153,7 +152,8 @@ router.post('/autoLogin', function(req, res){
                     responseData.data = {
                         user_id : userInfo._id,
                         user_name : userInfo.user_name,
-                        avatar: userInfo.avatar
+                        avatar: userInfo.avatar,
+                        user_intro: userInfo.user_intro
                     };  
                     res.json(responseData);
                 }
@@ -415,6 +415,34 @@ router.post("/editArticle", function(req, res){
     
 })
 
+router.post('/delArticle', function(req, res){
+    let article_id = req.body.article_id;
+ console.log('article_id')
+        console.log(article_id)
+    Article.findOne({
+        _id: article_id
+    }).then(function(article){
+        console.log('article')
+        console.log(article)
+        if(article){
+           return Article.remove({
+                _id: article
+            })
+        }
+    },function(){
+        responseData.code = "2";
+        responseData.msg = "文章不存在";
+        res.json(responseData);
+       
+    }).then(function(del){
+        if(del){
+            console.log("lellele")
+            responseData.msg = "删除文章成功";
+            res.json(responseData);
+        }
+        
+    })
+})
 
 
 module.exports =  router;

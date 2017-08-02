@@ -16,12 +16,12 @@ var mongoose = require("mongoose");
 //加载body-parser模块,用来处理post提交过来的数据
 var bodyParser = require("body-parser");
 //中间件 bodyParser设置  post请求传过来的数据会通过url编码,用这个来处理
-app.use(bodyParser.urlencoded({extended: true}));//以后req里会封装一个body供使用
+app.use(bodyParser.json({limit:'50mb'}));
+app.use(bodyParser.urlencoded({limit:'50mb',extended: true}));//以后req里会封装一个body供使用
 //加载cookies
 var cookies = require("cookies");
 //用中间件的方式 用户访问站点都会走这个中间件
 var User = require('./backend/models/User');
-app.use(bodyParser.json({limit : '1000kb'}));
 //中间件
 app.use(function(req, res, next){
     req.cookies = new cookies(req, res);

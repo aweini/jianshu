@@ -1,12 +1,20 @@
 import cfg from 'config/config.json';
 import {withRouter} from 'react-router-dom';
 import S from './style.scss';
-
+import AlertPlugin from 'common/util/alertPlugin';
+import majax from 'common/util/majax';
+import popPlugin from "common/util/popPlugin"
+let pop = new popPlugin();
 class Article extends React.Component{
     constructor(props){
         super(props);
         console.log(this.props.location);
         this.editArticle = this.editArticle.bind(this);
+        this.deleteArticle = this.deleteArticle.bind(this);
+        this.approveDelete = this.approveDelete.bind(this);
+        this.state = {
+            showAlert: false
+        }
     }
     editArticle(ev){
         let { history } = this.props;
@@ -17,13 +25,42 @@ class Article extends React.Component{
             article_id
         })
     }
+    deleteArticle(){
+        console.log("deleteArticle");
+        console.log(AlertPlugin);
+        let alertTip = "确定删除?"
+        // this.setState({
+        //     showAlert:true
+        // }) 
+        pop.confirm(alertTip, this.approveDelete)
+    }
+    approveDelete(){
+        console.log('删除');
+        let { article_id } = this.props.location.state;
+        let {history} = this.props;
+        console.log(majax)
+        majax({
+            url:`${cfg.url}/api/delArticle`,
+            data: {article_id: '111111'}
+        },function(res){
+            console.log(res);
+            //history.goBack();
+        });
+        // $.post(`${cfg.url}/api/delArticle`,{article_id})
+        // .done((res)=>{
+        //     if(res.code==0){
+        //        history.goBack();
+        //     }
+        // })
+    }
     render(){
         let {article_title, article_id, article_content, add_time,user_id,
                 user_name,
                 avatar,
                 user_intro} = this.props.location.state;
         let {myInfo} = this.props;
-        let {editArticle} = this;
+        let {editArticle,deleteArticle,denyDelete,approveDelete,alertTip} = this;
+        let {showAlert} = this.state;
         let isMe = false;
         if(myInfo){
             if(myInfo.user_id == user_id){
@@ -44,11 +81,18 @@ class Article extends React.Component{
                {article_content}
            </div>
 
-           {isMe?(<div className="ui button tiny basic floated" onClick={editArticle}>
+           {isMe?(<div>
+               <div className="ui button tiny basic floated" onClick={editArticle}>
                     <i className="icon write"></i>
                         编辑
                 </div>
+                <div className="ui button tiny basic floated" onClick={deleteArticle}>
+                    <i className="icon write"></i>
+                        删除
+                </div>
+                </div>
                ):null}
+              {/* <AlertPlugin {...{showAlert, approveDelete,alertTip}}></AlertPlugin> */}
         </div>)
     }
 }
