@@ -2,9 +2,11 @@ export default class PopPlugin {
     constructor(){
     }
     clear(){
-         let popPlugin = document.querySelector(".pop_plugin");
+        console.log("clear");
+         let popPlugin = $(".pop_plugin");
         if(popPlugin){
-            document.removeChild(popPlugin);
+            popPlugin.parent().remove();
+           popPlugin.remove()
         }
     }
     alert(alertTip){
