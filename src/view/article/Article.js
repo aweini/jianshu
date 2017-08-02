@@ -41,7 +41,7 @@ class Article extends React.Component{
         console.log(majax)
         majax({
             url:`${cfg.url}/api/delArticle`,
-            data: {article_id: '111111'}
+            data: {article_id}
         },function(res){
             console.log(res);
             //history.goBack();
