@@ -7,10 +7,14 @@ function majax(configs,callback,error){
             url: configs.url,
             data: configs.data
         }).then(function(res){
+            console.log("$");
+             console.log(this);//ajax的this
+              console.log("$");
             if(res.code!=0){
                 pop.alert(res.msg);
+                return;
             }
-            callback&&callback(res)
+            callback&&callback(res);
         })
 }
 

@@ -1,7 +1,7 @@
 import cfg from 'config/config.json';
 import S from './style.scss';
 import {withRouter} from 'react-router-dom'
-
+import majax from 'common/util/majax';
 class Edit extends React.Component{
     constructor(props){
         super(props)
@@ -13,8 +13,8 @@ class Edit extends React.Component{
             titleVal:'',
             cltVal: '',
             contentVal: '',
-            collections: [],
-            defaultCollection:''
+            defaultCollection:'',
+            collections: []
         }
         this.collectionName = {};
         this.changeTitle = this.changeTitle.bind(this);
@@ -40,36 +40,36 @@ class Edit extends React.Component{
         })
     }
     addCollection(ev){
-        console.log('addCollection');
+        let that = this;
         let {user_id} = this.props.myInfo;
-        console.log(this.props)
         if(ev.keyCode==13){
-             console.log('回车');
-            $.post(`${cfg.url}/api/addCollection`, {
-                name: this.state.cltVal,
-                user_id
-            })
-            .done(({code, data})=>{
-                if(code==0){
-                    this.setState({
+            majax({
+                url:`${cfg.url}/api/addCollection`,
+                data: { name: this.state.cltVal, user_id}
+            },function(res){
+                console.log("edit addCollection");
+                console.log(this);//在majax 执行callback就是执行该函数，此时this为空
+                //如果想使用本上下文的this用that代替
+                //如果想使用majax的this 在majax中call majax的this callback&&callback.call(this,res)
+                console.log("edit addCollection");
+                that.setState({
                         cltVal: ''
                     })
-                    this.props.updataCollection(data)
-                }
-                
-            })
+                that.props.updataCollection(res.data)
+            });
         }
        
     }
     componentDidMount(){ 
         console.log("componentDidMount");
         console.log(this.props.myInfo);
-        if(this.props.myInfo){
-            let {user_id} = this.props.myInfo;
+         let {user_id} = this.props.location.state;
+         //刷新后props传过来的属性就没了方法还在，但state里的东西一直存在
+        if(user_id){
             $.post(`${cfg.url}/api/getCollection`,{user_id})
             .done((res)=>{
                 if(res.code==0){
-                    // this.props.updataCollection(res.data);
+                    this.props.updataCollection(res.data);
                     this.setState({
                         collections: res.data
                     })
@@ -101,23 +101,25 @@ class Edit extends React.Component{
     onsubmit(e){
         e.preventDefault();
         e.stopPropagation();
+        let that = this;
         let {value: cltId} = this.refs.cltIdInput;
         let {titleVal, contentVal} = this.state;
         let {history,myInfo} = this.props;
-        console.log('history');
-        console.log(history);
         let {user_id} = this.props.myInfo;
         let {collectionName} = this;
         let {article_id} = this.props.location.state;
-        $.post(`${cfg.url}/api/editArticle`,{
-            article_id,
-            article_title: titleVal,
-            article_content: contentVal,
-            collection_id: cltId,
-            user_id: user_id
-        }).done((res)=>{
-            if(res.code==0){
-                this.setState({
+
+        majax({
+                url:`${cfg.url}/api/editArticle`,
+                data: { 
+                    article_id,
+                    article_title: titleVal,
+                    article_content: contentVal,
+                    collection_id: cltId,
+                    user_id: user_id
+                }
+            },function(res){
+                that.setState({
                     titleVal:'',
                     contentVal: ''
                 });
@@ -131,19 +133,19 @@ class Edit extends React.Component{
                     avatar: myInfo.avatar,
                     user_intro: myInfo.user_intro
                 });
+        });
 
-                
-            }
-        })
+
     }
 
     render(){
 
         let {changeTitle, changeClt, changeContent,addCollection,collectionName,onsubmit} = this;
-        let {titleVal,cltVal,contentVal,collections,defaultCollection} = this.state;
-       // if(!collections){
-           // collections = this.props.collections;
-       // }
+        let {titleVal,cltVal,contentVal,defaultCollection} = this.state;
+        let {collections } = this.props;
+        if(!collections){
+           collections = this.state.collections;
+        }
        console.log('render');
         collections = collections.map((el,index)=>{
             collectionName[el.collection_id] = el.collection_name;

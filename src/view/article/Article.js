@@ -18,16 +18,15 @@ class Article extends React.Component{
     }
     editArticle(ev){
         let { history } = this.props;
-        let { article_id } = this.props.location.state;
+        let { article_id ,user_id} = this.props.location.state;
         ev.preventDefault();
         ev.stopPropagation();
         history.push('/edit',{
-            article_id
+            article_id,
+            user_id
         })
     }
     deleteArticle(){
-        console.log("deleteArticle");
-        console.log(AlertPlugin);
         let alertTip = "确定删除?"
         // this.setState({
         //     showAlert:true
@@ -35,16 +34,13 @@ class Article extends React.Component{
         pop.confirm(alertTip, this.approveDelete)
     }
     approveDelete(){
-        console.log('删除');
         let { article_id } = this.props.location.state;
         let {history} = this.props;
-        console.log(majax)
         majax({
             url:`${cfg.url}/api/delArticle`,
             data: {article_id}
         },function(res){
-            console.log(res);
-            //history.goBack();
+            history.goBack();
         });
         // $.post(`${cfg.url}/api/delArticle`,{article_id})
         // .done((res)=>{

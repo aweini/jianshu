@@ -1,13 +1,15 @@
 import S from './style.scss';
 import cfg from 'config/config.json';
-import userImage from 'common/images/user.png'
-import 'common/util/resize.min.js'
+//import userImage from 'common/images/user.png'
+import 'common/util/resize.min.js';
+import majax from 'common/util/majax';
 export default class Aside extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             inEdit: false,
-            editVal: ''
+            editVal: '',
+            userImage: ''
         }
         this.notebooksClick = this.notebooksClick.bind(this);
         this.editMe = this.editMe.bind(this);
@@ -27,10 +29,11 @@ export default class Aside extends React.Component{
        // e.preventDefault();
        // e.stopPropagation();
        let {userInfo} = this.props;
-       let {user_intro} = userInfo.user_intro;
+       let {user_intro, avatar} = userInfo;
         this.setState({
             inEdit: true,
-            editVal: user_intro
+            editVal: user_intro,
+            userImage : avatar
         })
     }
     cancelEdit(e){
@@ -41,22 +44,22 @@ export default class Aside extends React.Component{
         })
     }
     editDone(e){
+        let that = this;
         e.preventDefault();
         e.stopPropagation();
         let {editVal} = this.state;
         let { userInfo:{user_id}, upDateMyInfo} = this.props;
         let avatar = this.refs.userImg.src;
-        $.post(`${cfg.url}/api/editUserInfo`,{user_intro: editVal, avatar, user_id})
-        .done((res)=>{
-            if(res.code==0){
-                console.log('editVal');
-                console.log(editVal);
+        
+        majax({
+            url:`${cfg.url}/api/editUserInfo`,
+            data: {user_intro: editVal, avatar, user_id}
+        },function(res){
                 upDateMyInfo(editVal, avatar);
-                this.setState({
+                that.setState({
                     inEdit: false
                 })
-            }
-        })
+        });
 
         
     }
@@ -105,7 +108,7 @@ export default class Aside extends React.Component{
         let {userInfo, notebooks,isMe} = this.props;
         let {user_intro} = userInfo;
         let {notebooksClick, editMe, cancelEdit, editDone, editContent, uploadImg} = this;
-        let {inEdit, editVal} = this.state;
+        let {inEdit, editVal, userImage} = this.state;
         user_intro = user_intro?user_intro:"用户暂时没写自我介绍哦";
         notebooks = notebooks.map((el, index)=>{
             let {collection_name,collection_id } = el;

@@ -266,7 +266,7 @@ export default class Frame extends React.Component{
 
                 <Route exact path="/edit"  render={
                     (props)=>(
-                        <Edit {...{myInfo}} {...props}> </Edit>
+                        <Edit {...{myInfo, collections, updataCollection}} {...props}> </Edit>
                     )
                 }>
                 </Route>

@@ -1,7 +1,7 @@
 import cfg from 'config/config.json';
 import S from './style.scss';
 import {withRouter} from 'react-router-dom'
-
+import majax from 'common/util/majax';
 class Write extends React.Component{
     constructor(props){
         super(props)
@@ -12,7 +12,8 @@ class Write extends React.Component{
         this.state = {
             titleVal:'',
             cltVal: '',
-            contentVal: ''
+            contentVal: '',
+            collections: []
         }
         this.collectionName = {};
         this.changeTitle = this.changeTitle.bind(this);
@@ -42,35 +43,37 @@ class Write extends React.Component{
         let {user_id} = this.props.myInfo;
         console.log(this.props)
         if(ev.keyCode==13){
-             console.log('回车');
-            $.post(`${cfg.url}/api/addCollection`, {
-                name: this.state.cltVal,
-                user_id
-            })
-            .done(({code, data})=>{
-                if(code==0){
-                    this.setState({
+            majax({
+                url:`${cfg.url}/api/addCollection`,
+                data: { name: this.state.cltVal, user_id}
+            },function(res){
+                console.log("edit addCollection");
+                console.log(this);//在majax 执行callback就是执行该函数，此时this为空
+                //如果想使用本上下文的this用that代替
+                //如果想使用majax的this 在majax中call majax的this callback&&callback.call(this,res)
+                console.log("edit addCollection");
+                that.setState({
                         cltVal: ''
                     })
-                    this.props.updataCollection(data)
-                }
-                
-            })
+                that.props.updataCollection(res.data)
+            });
+
+
         }
        
     }
-    componentDidMount(){ 
-        if(this.props.myInfo){
-            let {user_id} = this.props.myInfo;
+    componentDidMount(){
+        let {user_id} = this.props.location.state.userInfo; 
+        if(user_id){
             $.post(`${cfg.url}/api/getCollection`,{user_id})
             .done((res)=>{
                 if(res.code==0){
                      console.log("collections res.data");
                      console.log(res.data);
                      this.props.updataCollection(res.data);
-                    // this.setState({
-                    //     collections: res.data
-                    // })
+                    this.setState({
+                        collections: res.data
+                    })
                 }
             })
         }
@@ -84,6 +87,7 @@ class Write extends React.Component{
     onsubmit(e){
         e.preventDefault();
         e.stopPropagation();
+        let that = this;
         let {value: cltId} = this.refs.cltIdInput;
         let {titleVal, contentVal} = this.state;
         let {history,myInfo} = this.props;
@@ -91,15 +95,17 @@ class Write extends React.Component{
         console.log(history);
         let {user_id} = this.props.myInfo;
         let {collectionName} = this;
-        $.post(`${cfg.url}/api/addArticle`,{
-            article_title: titleVal,
-            article_content: contentVal,
-            user_id,
-            collection_id: cltId,
-            collection_name: collectionName[cltId]
-        }).done((res)=>{
-            if(res.code==0){
-                this.setState({
+        majax({
+            url:`${cfg.url}/api/addArticle`,
+            data: { 
+                article_title: titleVal,
+                article_content: contentVal,
+                user_id,
+                collection_id: cltId,
+                collection_name: collectionName[cltId]
+            }
+        },function(res){
+                that.setState({
                     titleVal:'',
                     contentVal: ''
                 });
@@ -113,10 +119,9 @@ class Write extends React.Component{
                     avatar: myInfo.avatar,
                     user_intro: myInfo.user_intro
                 });
+        });
 
-                
-            }
-        })
+
     }
 
     render(){
@@ -124,9 +129,9 @@ class Write extends React.Component{
         let {changeTitle, changeClt, changeContent,addCollection,collectionName,onsubmit} = this;
         let {titleVal,cltVal,contentVal} = this.state;
         let {collections}  = this.props;
-       // if(!collections){
-           // collections = this.props.collections;
-       // }
+       if(!collections){
+           collections = this.state.collections;
+       }
         collections = collections.map((el,index)=>{
             collectionName[el.collection_id] = el.collection_name;
             return(
