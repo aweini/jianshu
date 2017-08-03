@@ -42,6 +42,7 @@ class Write extends React.Component{
         console.log('addCollection');
         let {user_id} = this.props.myInfo;
         console.log(this.props)
+        let that = this;
         if(ev.keyCode==13){
             majax({
                 url:`${cfg.url}/api/addCollection`,
@@ -63,18 +64,17 @@ class Write extends React.Component{
        
     }
     componentDidMount(){
+        let that = this;
         let {user_id} = this.props.location.state.userInfo; 
         if(user_id){
-            $.post(`${cfg.url}/api/getCollection`,{user_id})
-            .done((res)=>{
-                if(res.code==0){
-                     console.log("collections res.data");
-                     console.log(res.data);
-                     this.props.updataCollection(res.data);
-                    this.setState({
-                        collections: res.data
-                    })
-                }
+            majax({
+                url: `${cfg.url}/api/getCollection`,
+                data: {user_id}
+            },function(res){
+                that.props.updataCollection(res.data);
+                that.setState({
+                    collections: res.data
+                })
             })
         }
         $(this.refs.dropdown).dropdown();

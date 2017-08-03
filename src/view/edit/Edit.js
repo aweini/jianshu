@@ -63,32 +63,32 @@ class Edit extends React.Component{
     componentDidMount(){ 
         console.log("componentDidMount");
         console.log(this.props.myInfo);
-         let {user_id} = this.props.location.state;
+        let that = this;
+        let {user_id} = this.props.location.state;
          //刷新后props传过来的属性就没了方法还在，但state里的东西一直存在
         if(user_id){
-            $.post(`${cfg.url}/api/getCollection`,{user_id})
-            .done((res)=>{
-                if(res.code==0){
-                    this.props.updataCollection(res.data);
-                    this.setState({
-                        collections: res.data
-                    })
-                }
+            majax({
+                url: `${cfg.url}/api/getCollection`,
+                data: {user_id}
+            },function(res){
+                this.props.updataCollection(res.data);
+                this.setState({
+                    collections: res.data
+                })
             })
         }
         let {article_id} = this.props.location.state;
         if(article_id){
-            $.post(`${cfg.url}/api/getArticle`, {article_id})
-            .done((res)=>{
-                if(res.code==0){
-                    console.log(res);
-                    this.setState({
-                        titleVal: res.data.article_title,
-                        contentVal: res.data.article_content,
-                        defaultCollection: res.data.the_collection.collection_name
-                    })
-                    this.refs.cltIdInput.value = res.data.the_collection.collection_id;
-                }
+            majax({
+                url: `${cfg.url}/api/getArticle`,
+                data: {article_id}
+            },function(res){
+                that.setState({
+                    titleVal: res.data.article_title,
+                    contentVal: res.data.article_content,
+                    defaultCollection: res.data.the_collection.collection_name
+                })
+                that.refs.cltIdInput.value = res.data.the_collection.collection_id;
             })
         }
         $(this.refs.dropdown).dropdown();

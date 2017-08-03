@@ -4,44 +4,69 @@
 import PreviewList from 'preview/PreviewList';
 import Recommend from 'home/Recommend';
 import cfg from 'config/config.json';
+import S from './style.scss';
+import majax from 'common/util/majax';
 
 export default class Home extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            pageIndex: 1,
+            pageNum: 10,
             previews:[],
-            authors:[]
+            authors:[],
+            more: true
         }
        this.collectionClick = this.collectionClick.bind(this);
+       this.getPreviews = this.getPreviews.bind(this);
+    }
+
+    getPreviews(){
+        let that = this;
+        let {pageIndex, pageNum,previews} = this.state;
+        majax({
+            url:`${cfg.url}/api/getPreview`,
+            data: {pageIndex,pageNum}
+        },function(res){
+            if(res.data.length<pageNum){
+                that.setState({
+                    more: false
+                })
+            }else{
+                pageIndex++;
+                that.setState({
+                    previews: previews.concat(res.data),
+                    pageIndex
+                })
+            }
+                
+        });
     }
 
     componentDidMount(){
-        $.post(`${cfg.url}/api/getPreview`)
-        .done(res=>{
-            if(res.code==0){
-                console.log("getPreview res");
-                console.log(res);
-                res.data.map((el,index)=>{
-                    //el.user.avatar = cfg.url_dest + el.user.avatar;
-                   // el.user.avatar = `http://api.noods.me${el.user.avatar}`
-                })
-                this.setState({
-                    previews: res.data
-                })
-            }
+        let that = this;
+        this.getPreviews();
+        majax({
+            url:`${cfg.url}/api/getAuthor`
+        },function(res){
+            that.setState({
+                authors: res.data
+            })
         });
-        $.post(`${cfg.url}/api/getAuthor`)
-        .done(res=>{
-            if(res.code==0){
-                res.data.map((el,index)=>{
-                   // el.avatar = cfg.url_dest + el.avatar;
-                    //el.avatar = `http://api.noods.me${el.avatar}`
-                })
-                this.setState({
-                    authors: res.data
-                })
+
+        let previewListWrapper = this.refs.previewListWrapper;
+        $(previewListWrapper).scroll(function(e){
+            if(e.currentTarget.scrollTop + e.currentTarget.offsetHeight >=e.currentTarget.scrollHeight){
+                console.log('more');
+                let more = that.state;
+                if(more){
+                    that.getPreviews();
+                }
+                
             }
-        });
+        })
+
+
     }
 
     collectionClick(collection_id,collection_name, userInfo){
@@ -56,7 +81,7 @@ export default class Home extends React.Component{
         let {collectionClick} = this;
         
         return ( 
-            <div className="ui container grid">
+            <div className={`ui container grid ${S.preview_list_wrapper}`} ref="previewListWrapper">
                 <div className="column twelve wide">
                     <PreviewList {...{previews,initMyPage,collectionClick}}></PreviewList>
                 </div>

@@ -5,7 +5,7 @@ function majax(configs,callback,error){
         {
             type: configs.type||'post',
             url: configs.url,
-            data: configs.data
+            data: configs.data||{}
         }).then(function(res){
             console.log("$");
              console.log(this);//ajax的this

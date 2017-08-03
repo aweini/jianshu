@@ -42,12 +42,6 @@ class Article extends React.Component{
         },function(res){
             history.goBack();
         });
-        // $.post(`${cfg.url}/api/delArticle`,{article_id})
-        // .done((res)=>{
-        //     if(res.code==0){
-        //        history.goBack();
-        //     }
-        // })
     }
     render(){
         let {article_title, article_id, article_content, add_time,user_id,

@@ -36,8 +36,8 @@ export default class MyPage extends React.Component{
             
         }
         return(
-            <div className="ui container grid">
-                <div className="twelve wide column">
+            <div className="ui container grid scroll_height">
+                <div className="twelve wide column scroll_height">
                     <AuthorInfo {...{userInfo,initMyPage}}></AuthorInfo>
                     <div className="ui secondary pointing menu">
                         <span className="active item">

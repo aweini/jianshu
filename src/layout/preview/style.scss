@@ -31,3 +31,8 @@
         }
     }
 }
+.preview_list_wrapper{
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}

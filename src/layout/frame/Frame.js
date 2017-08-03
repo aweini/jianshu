@@ -11,6 +11,8 @@ import Write from 'write/Write';
 import Article from 'article/Article';
 import Edit from 'edit/Edit';
 import cfg from 'config/config.json';
+import S from './style.scss';
+import majax from 'common/util/majax'
 
 //有route的路有页面 this.props里有history location match 等其他属性，其中history里有push函数 location等等
 //location里有 hash pathname search state等信息，state里可以防止要传递的信息
@@ -49,7 +51,6 @@ export default class Frame extends React.Component{
 
     initMyInfo(myInfo){
         if(myInfo){
-           // myInfo.avatar = cfg.url_dest+ myInfo.avatar;
             myInfo.user_intro = myInfo.user_intro?myInfo.user_intro:'没有自我介绍';
         }
         this.setState({
@@ -87,17 +88,15 @@ export default class Frame extends React.Component{
         })
     }
     getCollection(user_id){
-       
-        $.post(`${cfg.url}/api/getCollection`,{user_id})
-            .done((res)=>{
-                console.log('getCollection collections')
-                console.log(res)
-                if(res.code==0){
-                    this.setState({
-                        collections: res.data
-                    })
-                }
+       let that = this;
+       majax({
+           url: `${cfg.url}/api/getCollection`,
+           data: {user_id}
+       },function(res){
+           that.setState({
+                collections: res.data
             })
+       })
     }
     updataCollection(collections){
         this.setState({
@@ -106,23 +105,21 @@ export default class Frame extends React.Component{
     }
 
     logout(){
-        $.post(`${cfg.url}/api/logout`)
-        .done((res)=>{
-            if(res.code==0){
-               this.initMyInfo(null);
-            }
+        let that = this;
+        majax({
+            url: `${cfg.url}/api/logout`
+        },function(res){
+            that.initMyInfo(null);
         })
     }
 //只在这个frame组件第一次挂在的时候调用，后面路由间跳转都是在frame下的路由间跳转frame不变，所以这个不会再执行，
 //除非刷新页面，frame的挂载会再执行一次
     componentDidMount(){
-        $.post(`${cfg.url}/api/autoLogin`,{})
-        .done((res)=>{
-            if(res.code==0){
-                // res.data.user_id = res.data.id;
-                // res.data.user_name = res.data.user_name;
-            }
-            this.initMyInfo(res.data);
+        let that = this;
+        majax({
+            url: `${cfg.url}/api/autoLogin`
+        },function(res){
+            that.initMyInfo(res.data);
         })
         this.setState({hasLoginReq: true});
         let {pathname, state} = this.props.location;
@@ -149,40 +146,34 @@ export default class Frame extends React.Component{
     }
 
     getPreviews(data){
-        $.post(`${cfg.url}/api/getPreview`, data)
-        .done(({code, data})=>{
-            if(code==0){
-                data.map((el,index)=>{
-                   // el.user.avatar = cfg.url_dest + el.user.avatar;
-                })
-                //console.log('getPreviews');
-                this.setState({
-                    myPagePreviews: data
-                })
-            }
+        let that = this;
+        majax({
+            url:`${cfg.url}/api/getPreview`,
+            data: data
+        },function(res){
+            that.setState({
+                myPagePreviews: res.data
+            })
         })
     }
 //比如从home页点击nav上的个人头像跳转到个人页面，刚跳过去的时候render()一次，
 //后续getPreviews setState会render()一次
 //getCollection ajax数据返回的时候 setState又会render()一次 这几次setState相差时间太长所以各自render
     initMyPage(user_id, collection_id, previewsName){
-        console.log("initMyPage", user_id,collection_id)
+        console.log("initMyPage", user_id,collection_id);
+        let that = this;
         this.getPreviews({
             user_id,
             collection_id
         });
-        $.post(`${cfg.url}/api/getCollection`, {
-            user_id
-        })
-        .done(({code, data})=>{
-            
-            if(code==0){
-                 //console.log('getCollection');
-                this.setState({
-                    notebooks: data,
-                    previewsName
-                })
-            }
+        majax({
+            url: `${cfg.url}/api/getCollection`,
+            data: {user_id}
+        },function(res){
+            that.setState({
+                notebooks: data,
+                previewsName
+            })
         })
     }
 
@@ -209,7 +200,7 @@ export default class Frame extends React.Component{
         //等ajax请求回来 setState会重新调用render函数，再渲染
        // console.log(myInfo);
         return (
-            <div>
+            <div ref="frameWapper" className={S.frame_wrapper}>
                 <Nav {...{myInfo,logout,initMyPage,history,getCollection}}/>
                 <Route exact path="/" render={
                     (props)=>(
