@@ -171,7 +171,7 @@ export default class Frame extends React.Component{
             data: {user_id}
         },function(res){
             that.setState({
-                notebooks: data,
+                notebooks: res.data,
                 previewsName
             })
         })

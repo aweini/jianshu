@@ -1,5 +1,5 @@
 {
-  "url_dest": "http://localhost:8080",
+  "url": "http://localhost:8080",
   "url2": "http://api.noods.me",
-  "url":"http://localhost:9000"
+  "url_dest":"http://localhost:9000"
 }

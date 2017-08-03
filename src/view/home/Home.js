@@ -30,6 +30,7 @@ export default class Home extends React.Component{
         },function(res){
             if(res.data.length<pageNum){
                 that.setState({
+                    previews: previews.concat(res.data),
                     more: false
                 })
             }else{

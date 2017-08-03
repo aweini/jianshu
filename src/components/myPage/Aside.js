@@ -50,16 +50,34 @@ export default class Aside extends React.Component{
         let {editVal} = this.state;
         let { userInfo:{user_id}, upDateMyInfo} = this.props;
         let avatar = this.refs.userImg.src;
-        
-        majax({
-            url:`${cfg.url}/api/editUserInfo`,
-            data: {user_intro: editVal, avatar, user_id}
-        },function(res){
-                upDateMyInfo(editVal, avatar);
+        //let avatar = $(that.refs.imageUpload)[0].files[0]; //这样jquery传不过去，原生的ajax也不能传啊，因为它的值不是字符串
+        let formData = new FormData();
+        formData.append('avatar', $(that.refs.imageUpload)[0].files[0]);
+        formData.append('user_intro', editVal);
+        // majax({
+        //     url:`${cfg.url}/api/editUserInfo`,
+        //     data: {avatar, user_intro: editVal}
+        // },function(res){
+        //         upDateMyInfo(editVal, avatar);
+        //         that.setState({
+        //             inEdit: false
+        //         })
+        // });
+        $.ajax({
+            url: `${cfg.url}/api/editUserInfo`,
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+             upDateMyInfo(editVal, avatar);
                 that.setState({
                     inEdit: false
                 })
-        });
+        }).fail(function(res) {});
+
+
 
         
     }
@@ -147,7 +165,7 @@ export default class Aside extends React.Component{
                                 >
                                     <div className={S.img_label}>
                                         <img className={`ui medium circular image ${S.user_img}`} ref="userImg" src={userImage} />
-                                        <input id="imageUpload" type="file" className={S.img_input} onChange={(e)=>{
+                                        <input ref="imageUpload" type="file" className={S.img_input} onChange={(e)=>{
                                             uploadImg(e)
                                         }}/>
                                         <div className={S.img_tip}>上传头像</div>
