@@ -7,6 +7,9 @@ var User = require('../models/User');
 var Collection = require('../models/Collection');
 var cookies = require('cookies');
 var Article = require('../models/Article');
+var multer = require('multer');
+var upload = multer({ dest: './uploads/' });
+var fs = require('fs');
 
 //统一返回格式
 var responseData;
@@ -69,14 +72,36 @@ router.post('/register', function(req, res, next){
 });
 
 //更新用户信息
-router.post('/editUserInfo', function(req, res){
+router.post('/editUserInfo', upload.single('avatar'), function(req, res){
+    console.log("editUserInfo")
+    console.log(req.body)
+    console.log("req.files")
+    console.log(req.file)
     var user_id = req.body.user_id;
     var user_intro = req.body.user_intro;
-    var avatar = req.body.avatar;
+    var avatarImg = req.file;
 
+    var des_file = __dirname + "/" + avatarImg.originalname;
+    fs.readFile(avatarImg.path, function (err, data) {
+        console.log('readFile readFile');
+        fs.writeFile(des_file, data, function (err) {
+            console.log('writeFile readFile');
+         if( err ){
+             console.log('errerr err err');
+              console.log( err );
+         }else{
+               response = {
+                   message:'File uploaded successfully',
+               };
+          }
+          console.log( response );
+          
+       });
+   });
+    var avatarPath = avatarImg.path;
     User.update({_id: user_id},{
         user_intro,
-        avatar
+        avatar: avatarPath
     }).then(function(user){
         if(user){
             User.findOne({

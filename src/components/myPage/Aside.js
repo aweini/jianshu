@@ -54,6 +54,7 @@ export default class Aside extends React.Component{
         let formData = new FormData();
         formData.append('avatar', $(that.refs.imageUpload)[0].files[0]);
         formData.append('user_intro', editVal);
+        formData.append('user_id',user_id);
         // majax({
         //     url:`${cfg.url}/api/editUserInfo`,
         //     data: {avatar, user_intro: editVal}
