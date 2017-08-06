@@ -48,38 +48,16 @@ export default class Aside extends React.Component{
         e.preventDefault();
         e.stopPropagation();
         let {editVal} = this.state;
-        let { userInfo:{user_id}, upDateMyInfo} = this.props;
-        let avatar = this.refs.userImg.src;
-        //let avatar = $(that.refs.imageUpload)[0].files[0]; //这样jquery传不过去，原生的ajax也不能传啊，因为它的值不是字符串
-        let formData = new FormData();
-        formData.append('avatar', $(that.refs.imageUpload)[0].files[0]);
-        formData.append('user_intro', editVal);
-        formData.append('user_id',user_id);
-        // majax({
-        //     url:`${cfg.url}/api/editUserInfo`,
-        //     data: {avatar, user_intro: editVal}
-        // },function(res){
-        //         upDateMyInfo(editVal, avatar);
-        //         that.setState({
-        //             inEdit: false
-        //         })
-        // });
-        $.ajax({
-            url: `${cfg.url}/api/editUserInfo`,
-            type: 'POST',
-            cache: false,
-            data: formData,
-            processData: false,
-            contentType: false
-        }).done(function(res) {
-             upDateMyInfo(editVal, avatar);
+        let { userInfo:{user_id},upDateMyInfo} = this.props;
+        majax({
+            url:`${cfg.url}/api/user/editUserInfo`,
+            data: {user_id, user_intro: editVal}
+        },function(res){
+                upDateMyInfo({user_intro: res.data.user_intro});
                 that.setState({
                     inEdit: false
                 })
-        }).fail(function(res) {});
-
-
-
+        });
         
     }
     editContent(ev){
@@ -89,7 +67,8 @@ export default class Aside extends React.Component{
     }
 
    uploadImg(e){
-     var that = this;
+     let that = this;
+      let { userInfo:{user_id}, upDateMyInfo} = that.props;
      console.log(e.target.files);
     //  if(e.target.files&&e.target.files[0]){
     //      var destFile = e.target.files[0];
@@ -106,7 +85,6 @@ export default class Aside extends React.Component{
     //      }
     //  }
     
-    
     if(e.target.files&&e.target.files[0]){
          canvasResize(e.target.files[0], {
             crop: false,
@@ -114,8 +92,26 @@ export default class Aside extends React.Component{
             rotate: 0,
             callback(baseStr) {
              // console.log(baseStr)
-              console.log(baseStr.length)
-              that.refs.userImg.src =  baseStr;
+                console.log(baseStr.length)
+                that.refs.userImg.src =  baseStr;
+                 //let avatar = $(that.refs.imageUpload)[0].files[0]; //这样jquery传不过去，原生的ajax也不能传啊，因为它的值不是字符串
+                let formData = new FormData();
+                formData.append('avatar', $(that.refs.imageUpload)[0].files[0]);
+                formData.append('user_id',user_id);
+                $.ajax({
+                    url: `${cfg.url}/api/user/editUserAvatar`,
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                }).done(function(res) {
+                    upDateMyInfo({avatar : res.data.avatar});
+                    // that.setState({
+                    //     inEdit: false
+                    // })
+                }).fail(function(res) {});
+
             }
           })
     }

@@ -34,13 +34,20 @@ class Article extends React.Component{
         pop.confirm(alertTip, this.approveDelete)
     }
     approveDelete(){
-        let { article_id } = this.props.location.state;
-        let {history} = this.props;
+        let { article_id,user_id } = this.props.location.state;
+        let {history, myInfo,initMyPage} = this.props;
         majax({
-            url:`${cfg.url}/api/delArticle`,
+            url:`${cfg.url}/api/article/delArticle`,
             data: {article_id}
         },function(res){
-            history.goBack();
+            //history.goBack();
+            //majax callback  除了this，其他可以用
+            // 跳转和init 前后都会执行
+            initMyPage(user_id,"",'我的所有文章');
+            history.push('my_page',{
+                userInfo: myInfo
+            })
+            
         });
     }
     render(){

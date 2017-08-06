@@ -10,7 +10,7 @@ var express = require("express");
 var app = express();
 //设置静态文件托管
 //当用户访问的url以/public开始，那么直接返回对应__dirname+'/public'下的文件
-app.use('/' , express.static(__dirname+'/backend/assets'));
+app.use('/' , express.static(__dirname+'/backend/public'));
 //加载数据库模块
 var mongoose = require("mongoose");
 //加载body-parser模块,用来处理post提交过来的数据
@@ -69,12 +69,9 @@ app.use(function(req, res, next){
 //})
 
 //根据不同的功能划分模块
-//后端模块
-//app.use('/admin', require('./routers/admin'));
-//api模块
-//app.use('/api', require('./routers/api'));
-//首页模块
-app.use('/api', require('./backend/routers/api'));
+app.use('/api/user', require('./backend/routers/user'));
+app.use('/api/collection', require('./backend/routers/collection'));
+app.use('/api/article', require('./backend/routers/article'));
 
 //连接数据库,链接之前先开启数据库  指定mongodb把数据存储的位置blog/db  数据库端口号
 //sudo mongod --dbpath=/Users/mahong/Documents/mahong/myProjects/blog/db --port=27017

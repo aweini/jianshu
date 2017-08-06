@@ -44,7 +44,7 @@ class Edit extends React.Component{
         let {user_id} = this.props.myInfo;
         if(ev.keyCode==13){
             majax({
-                url:`${cfg.url}/api/addCollection`,
+                url:`${cfg.url}/api/collection/addCollection`,
                 data: { name: this.state.cltVal, user_id}
             },function(res){
                 console.log("edit addCollection");
@@ -68,7 +68,7 @@ class Edit extends React.Component{
          //刷新后props传过来的属性就没了方法还在，但state里的东西一直存在
         if(user_id){
             majax({
-                url: `${cfg.url}/api/getCollection`,
+                url: `${cfg.url}/api/collection/getCollection`,
                 data: {user_id}
             },function(res){
                 this.props.updataCollection(res.data);
@@ -80,7 +80,7 @@ class Edit extends React.Component{
         let {article_id} = this.props.location.state;
         if(article_id){
             majax({
-                url: `${cfg.url}/api/getArticle`,
+                url: `${cfg.url}/api/article/getArticle`,
                 data: {article_id}
             },function(res){
                 that.setState({
@@ -110,7 +110,7 @@ class Edit extends React.Component{
         let {article_id} = this.props.location.state;
 
         majax({
-                url:`${cfg.url}/api/editArticle`,
+                url:`${cfg.url}/api/article/editArticle`,
                 data: { 
                     article_id,
                     article_title: titleVal,

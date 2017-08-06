@@ -59,7 +59,7 @@ export default class Frame extends React.Component{
     }
 
     signInAjax(reqData){
-        $.post(`${cfg.url}/api/login`,reqData)
+        $.post(`${cfg.url}/api/user/login`,reqData)
         .done(res=>{
             let {code, data} = res;
             if(code==0){
@@ -70,7 +70,7 @@ export default class Frame extends React.Component{
         })
     }
     signUpAjax(reqData){
-        $.post(`${cfg.url}/api/register`,reqData)
+        $.post(`${cfg.url}/api/user/register`,reqData)
         .done(res=>{
             let {code, data} = res;
             this.setState({
@@ -90,7 +90,7 @@ export default class Frame extends React.Component{
     getCollection(user_id){
        let that = this;
        majax({
-           url: `${cfg.url}/api/getCollection`,
+           url: `${cfg.url}/api/collection/getCollection`,
            data: {user_id}
        },function(res){
            that.setState({
@@ -107,7 +107,7 @@ export default class Frame extends React.Component{
     logout(){
         let that = this;
         majax({
-            url: `${cfg.url}/api/logout`
+            url: `${cfg.url}/api/user/logout`
         },function(res){
             that.initMyInfo(null);
         })
@@ -117,7 +117,7 @@ export default class Frame extends React.Component{
     componentDidMount(){
         let that = this;
         majax({
-            url: `${cfg.url}/api/autoLogin`
+            url: `${cfg.url}/api/user/autoLogin`
         },function(res){
             that.initMyInfo(res.data);
         })
@@ -148,7 +148,7 @@ export default class Frame extends React.Component{
     getPreviews(data){
         let that = this;
         majax({
-            url:`${cfg.url}/api/getPreview`,
+            url:`${cfg.url}/api/article/getPreview`,
             data: data
         },function(res){
             that.setState({
@@ -167,7 +167,7 @@ export default class Frame extends React.Component{
             collection_id
         });
         majax({
-            url: `${cfg.url}/api/getCollection`,
+            url: `${cfg.url}/api/collection/getCollection`,
             data: {user_id}
         },function(res){
             that.setState({
@@ -177,10 +177,10 @@ export default class Frame extends React.Component{
         })
     }
 
-    upDateMyInfo(user_intro,avatar){
+    upDateMyInfo(info){
         let {myInfo} = this.state;
-        myInfo.user_intro = user_intro;
-        myInfo.avatar = avatar;
+        info.user_intro&&(myInfo.user_intro = info.user_intro);
+        info.avatar&&(myInfo.avatar = info.avatar);
         this.setState({
             myInfo
         })
@@ -203,6 +203,11 @@ export default class Frame extends React.Component{
             <div ref="frameWapper" className={S.frame_wrapper}>
                 <Nav {...{myInfo,logout,initMyPage,history,getCollection}}/>
                 <Route exact path="/" render={
+                    (props)=>(
+                        <Home {...{initMyPage}} {...props}></Home>
+                    )
+                }></Route>
+                <Route exact path="/index.html" render={
                     (props)=>(
                         <Home {...{initMyPage}} {...props}></Home>
                     )
@@ -250,7 +255,7 @@ export default class Frame extends React.Component{
 
                 <Route exact path="/article"  render={
                     (props)=>(
-                        <Article {...{myInfo}} {...props}> </Article>
+                        <Article {...{myInfo,initMyPage}} {...props}> </Article>
                     )
                 }>
                 </Route>

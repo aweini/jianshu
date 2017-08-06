@@ -45,7 +45,7 @@ class Write extends React.Component{
         let that = this;
         if(ev.keyCode==13){
             majax({
-                url:`${cfg.url}/api/addCollection`,
+                url:`${cfg.url}/api/collection/addCollection`,
                 data: { name: this.state.cltVal, user_id}
             },function(res){
                 console.log("edit addCollection");
@@ -68,7 +68,7 @@ class Write extends React.Component{
         let {user_id} = this.props.location.state.userInfo; 
         if(user_id){
             majax({
-                url: `${cfg.url}/api/getCollection`,
+                url: `${cfg.url}/api/collection/getCollection`,
                 data: {user_id}
             },function(res){
                 that.props.updataCollection(res.data);
@@ -96,7 +96,7 @@ class Write extends React.Component{
         let {user_id} = this.props.myInfo;
         let {collectionName} = this;
         majax({
-            url:`${cfg.url}/api/addArticle`,
+            url:`${cfg.url}/api/article/addArticle`,
             data: { 
                 article_title: titleVal,
                 article_content: contentVal,

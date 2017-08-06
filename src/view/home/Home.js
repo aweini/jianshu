@@ -25,7 +25,7 @@ export default class Home extends React.Component{
         let that = this;
         let {pageIndex, pageNum,previews} = this.state;
         majax({
-            url:`${cfg.url}/api/getPreview`,
+            url:`${cfg.url}/api/article/getPreview`,
             data: {pageIndex,pageNum}
         },function(res){
             if(res.data.length<pageNum){
@@ -48,7 +48,7 @@ export default class Home extends React.Component{
         let that = this;
         this.getPreviews();
         majax({
-            url:`${cfg.url}/api/getAuthor`
+            url:`${cfg.url}/api/user/getAuthor`
         },function(res){
             that.setState({
                 authors: res.data

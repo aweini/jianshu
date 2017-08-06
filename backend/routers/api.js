@@ -8,7 +8,18 @@ var Collection = require('../models/Collection');
 var cookies = require('cookies');
 var Article = require('../models/Article');
 var multer = require('multer');
-var upload = multer({ dest: './uploads/' });
+// var upload = multer({ dest: '/Users/mahong/mahong/mh'});
+//multer 路径相对于backendsever.js 起后端服务的路径
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './backend/public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now()+ '-'+file.originalname)
+  }
+})
+
+var upload = multer({ storage: storage })
 var fs = require('fs');
 
 //统一返回格式
@@ -74,31 +85,40 @@ router.post('/register', function(req, res, next){
 //更新用户信息
 router.post('/editUserInfo', upload.single('avatar'), function(req, res){
     console.log("editUserInfo")
-    console.log(req.body)
-    console.log("req.files")
+    console.log(req)
+    console.log("req.file")
     console.log(req.file)
+    var host = req.headers.host;
+    var origin = req.headers.origin;
+    if(origin.indexOf(host)>-1){
+        //没有跨域
+        host = origin;
+    }else {
+        protocal = origin.split("://")[0]+'://';
+        host = protocal+host;
+    }
     var user_id = req.body.user_id;
     var user_intro = req.body.user_intro;
     var avatarImg = req.file;
 
-    var des_file = __dirname + "/" + avatarImg.originalname;
-    fs.readFile(avatarImg.path, function (err, data) {
-        console.log('readFile readFile');
-        fs.writeFile(des_file, data, function (err) {
-            console.log('writeFile readFile');
-         if( err ){
-             console.log('errerr err err');
-              console.log( err );
-         }else{
-               response = {
-                   message:'File uploaded successfully',
-               };
-          }
-          console.log( response );
+   //var des_file = __dirname + "/" + avatarImg.originalname;
+    // fs.readFile(avatarImg.path, function (err, data) {
+    //     console.log('readFile readFile');
+    //     fs.writeFile(des_file, data, function (err) {
+    //         console.log('writeFile readFile');
+    //      if( err ){
+    //          console.log('errerr err err');
+    //           console.log( err );
+    //      }else{
+    //            response = {
+    //                message:'File uploaded successfully',
+    //            };
+    //       }
+    //       console.log( response );
           
-       });
-   });
-    var avatarPath = avatarImg.path;
+    //    });
+    // });
+    var avatarPath = host + '/uploads/'+ avatarImg.filename;
     User.update({_id: user_id},{
         user_intro,
         avatar: avatarPath
