@@ -10,12 +10,13 @@ module.exports = {
            app:[
             //    'webpack-hot-middleware/client?reload=true',
                './src/app.js'
-           ],
+           ]
+            ,
             vendor: 'jquery'
         },
     output: {
         path: path.resolve(__dirname, 'dist/assets'),
-        filename: '[name].js',
+        filename: '[name].[chunkhash].js',
         publicPath: '/assets/'
     },
     //对象单数 复数数组
@@ -85,7 +86,7 @@ module.exports = {
         ]
     },
     plugins:[
-        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             filename:'../index.html',
             template: './src/index.html'
@@ -98,8 +99,13 @@ module.exports = {
             PT: 'prop-types'
         }),
         new OpenBrowser({url: `http://localhost:${8080}`}),
+        // new webpack.DllReferencePlugin({
+        //     context: __dirname,
+        //     manifest: require('./manifest.json'),
+        // })
+        // ,
         new webpack.optimize.CommonsChunkPlugin({
-                name: 'vendor' // 指定公共 bundle 的名字。
+                name: ['vendor', 'manifest'] // 指定公共 bundle 的名字。
         })
     ],
     devtool: 'cheap-module-eval-source-map'
