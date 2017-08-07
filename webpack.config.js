@@ -10,7 +10,8 @@ module.exports = {
            app:[
             //    'webpack-hot-middleware/client?reload=true',
                './src/app.js'
-           ]
+           ],
+            vendor: 'jquery'
         },
     output: {
         path: path.resolve(__dirname, 'dist/assets'),
@@ -96,7 +97,10 @@ module.exports = {
             ReactDOM: 'react-dom',
             PT: 'prop-types'
         }),
-        new OpenBrowser({url: `http://localhost:${8080}`})
+        new OpenBrowser({url: `http://localhost:${8080}`}),
+        new webpack.optimize.CommonsChunkPlugin({
+                name: 'vendor' // 指定公共 bundle 的名字。
+        })
     ],
     devtool: 'cheap-module-eval-source-map'
 };
