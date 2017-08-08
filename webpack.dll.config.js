@@ -25,6 +25,21 @@ module.exports = {
         root: __dirname,       　　　　　　　　　　//根目录
         verbose:  true,        　　　　　　　　　　//开启在控制台输出信息
         dry:      false        　　　　　　　　　　//启用删除文件
+  }),
+      new webpack.ProvidePlugin({
+            $:'jquery',
+            jQuery:'jquery',
+            React: 'react',
+            ReactDOM: 'react-dom',
+            PT: 'prop-types'
+        }),
+  new webpack.optimize.UglifyJsPlugin({ // js、css都会压缩
+        compress: {
+            warnings: false
+        },
+        output: {
+            comments: false,
+        }
     })
  ]
 }
