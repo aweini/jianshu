@@ -65,7 +65,7 @@ export default class Nav extends React.Component{
                     <img src={myInfo.avatar} className="ui image avatar" alt=""/>
                     <span>{myInfo.user_name}</span>
                     <div className={S.dropDown}>
-                        <p onClick={logout}>注销</p>
+                        <p onClick={logout}>退出登录</p>
                     </div>
                 </NavLink>
             )

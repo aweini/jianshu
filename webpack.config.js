@@ -5,18 +5,24 @@ const path = require("path");
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowser = require('open-browser-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
+const WebpackChunkHash = require("webpack-chunk-hash");
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+
 module.exports = {
     entry: {
            app:[
             //    'webpack-hot-middleware/client?reload=true',
                './src/app.js'
-           ]
-            ,
-            vendor: 'jquery'
+           ],
+            vendor: ['jquery','react','react-dom','prop-types','react-router', 'react-router-dom','semantic-ui/dist/semantic.js']
         },
     output: {
         path: path.resolve(__dirname, 'dist/assets'),
         filename: '[name].[chunkhash].js',
+        chunkFilename: "[name].[chunkhash].js",
         publicPath: '/assets/'
     },
     //对象单数 复数数组
@@ -28,7 +34,18 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader','css-loader']
+                use: ['style-loader','css-loader'],
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options:{
+                                minimize: true //css压缩
+                            }
+                        }
+                    ]
+                })
             },
             {
                 test: /\.scss$/,
@@ -105,7 +122,48 @@ module.exports = {
         // })
         // ,
         new webpack.optimize.CommonsChunkPlugin({
-                name: ['vendor', 'manifest'] // 指定公共 bundle 的名字。
+                name: ['vendor', 'manifest'], // 指定公共 bundle 的名字。
+                minChunks: Infinity,
+        }),
+        new webpack.optimize.UglifyJsPlugin({ // js、css都会压缩
+            compress: {
+                warnings: false
+            },
+            output: {
+                comments: false,
+            }
+        }),
+        new ExtractTextPlugin("styles.css"),
+        // function() {
+        //     this.plugin("done", function(stats) {
+        //         require("fs").writeFileSync(
+        //         path.join(__dirname, "dist", "stats.json"),
+        //         JSON.stringify(stats.toJson()));
+        //     });
+        // }
+        new webpack.HashedModuleIdsPlugin(),
+        new WebpackChunkHash(),
+        new ChunkManifestPlugin({
+            filename: "chunk-manifest.json",
+            manifestVariable: "webpackManifest"
+        }),
+      
+        new CleanWebpackPlugin(
+            ['dist/'],　 //匹配删除的文件
+            {
+                root: __dirname,       　　　　　　　　　　//根目录
+                verbose:  true,        　　　　　　　　　　//开启在控制台输出信息
+                dry:      false        　　　　　　　　　　//启用删除文件
+            }
+        ),
+        new CompressionWebpackPlugin({ //gzip 压缩
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            test: new RegExp(
+                '\\.(js|css)$'    //压缩 js 与 css
+            ),
+            threshold: 10240,
+            minRatio: 0.8
         })
     ],
     devtool: 'cheap-module-eval-source-map'
