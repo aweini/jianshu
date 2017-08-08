@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowser = require('open-browser-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 const ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
 const WebpackChunkHash = require("webpack-chunk-hash");
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
@@ -16,8 +16,9 @@ module.exports = {
            app:[
             //    'webpack-hot-middleware/client?reload=true',
                './src/app.js'
-           ],
-            vendor: ['jquery','react','react-dom','prop-types','react-router', 'react-router-dom','semantic-ui/dist/semantic.js']
+           ]
+           // ,
+           // vendor: ['jquery','react','react-dom','prop-types','react-router', 'react-router-dom','semantic-ui/dist/semantic.js']
         },
     output: {
         path: path.resolve(__dirname, 'dist/assets'),
@@ -121,10 +122,10 @@ module.exports = {
         //     manifest: require('./manifest.json'),
         // })
         // ,
-        new webpack.optimize.CommonsChunkPlugin({
-                name: ['vendor', 'manifest'], // 指定公共 bundle 的名字。
-                minChunks: Infinity,
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //         name: ['vendor', 'manifest'], // 指定公共 bundle 的名字。
+        //         minChunks: Infinity,
+        // }),
         new webpack.optimize.UglifyJsPlugin({ // js、css都会压缩
             compress: {
                 warnings: false
@@ -141,21 +142,14 @@ module.exports = {
         //         JSON.stringify(stats.toJson()));
         //     });
         // }
-        new webpack.HashedModuleIdsPlugin(),
-        new WebpackChunkHash(),
-        new ChunkManifestPlugin({
-            filename: "chunk-manifest.json",
-            manifestVariable: "webpackManifest"
-        }),
+        // new webpack.HashedModuleIdsPlugin(),
+        // new WebpackChunkHash(),
+        // new ChunkManifestPlugin({
+        //     filename: "chunk-manifest.json",
+        //     manifestVariable: "webpackManifest"
+        // }),
       
-        new CleanWebpackPlugin(
-            ['dist/'],　 //匹配删除的文件
-            {
-                root: __dirname,       　　　　　　　　　　//根目录
-                verbose:  true,        　　　　　　　　　　//开启在控制台输出信息
-                dry:      false        　　　　　　　　　　//启用删除文件
-            }
-        ),
+        
         new CompressionWebpackPlugin({ //gzip 压缩
             asset: '[path].gz[query]',
             algorithm: 'gzip',
@@ -164,7 +158,11 @@ module.exports = {
             ),
             threshold: 10240,
             minRatio: 0.8
-        })
+        }),
+         new webpack.DllReferencePlugin({
+            context: __dirname,
+            manifest: require('./dist/assets/vendors-manifest.json'),
+        }),
     ],
     devtool: 'cheap-module-eval-source-map'
 };
