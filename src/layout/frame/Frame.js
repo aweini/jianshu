@@ -6,13 +6,14 @@ import Nav from '../nav/Nav';
 import Home from 'home/Home.js';
 import SignIn from 'user/SignIn';
 import SignUp from 'user/SignUp';
-import MyPage from 'user/MyPage';
+//import MyPage from 'user/MyPage';
 import Write from 'write/Write';
 import Article from 'article/Article';
 import Edit from 'edit/Edit';
 import cfg from 'config/config.json';
 import S from './style.scss';
 import majax from 'common/util/majax'
+
 
 //有route的路有页面 this.props里有history location match 等其他属性，其中history里有push函数 location等等
 //location里有 hash pathname search state等信息，state里可以防止要传递的信息
@@ -239,7 +240,7 @@ export default class Frame extends React.Component{
                     (props)=>(
                         <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage,myInfo,upDateMyInfo}}
                         {...props}
-                        >
+                        path={'user/MyPage'} >
 
                         </MyPage>
                     )

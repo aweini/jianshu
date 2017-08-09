@@ -109,13 +109,13 @@ module.exports = {
             filename:'../index.html',
             template: './src/index.html'
         }),
-        new webpack.ProvidePlugin({
-            $:'jquery',
-            jQuery:'jquery',
-            React: 'react',
-            ReactDOM: 'react-dom',
-            PT: 'prop-types'
-        }),
+        // new webpack.ProvidePlugin({
+        //     $:'jquery',
+        //     jQuery:'jquery',
+        //     React: 'react',
+        //     ReactDOM: 'react-dom',
+        //     PT: 'prop-types'
+        // }),
        // new OpenBrowser({url: `http://localhost:${8080}`}),
         // new webpack.DllReferencePlugin({
         //     context: __dirname,
