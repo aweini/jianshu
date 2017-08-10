@@ -213,7 +213,10 @@ export default class Frame extends React.Component{
                         <Home {...{initMyPage}} {...props}></Home>
                     )
                 }></Route>    
-                {/* <Route exact path="/"  component={Home} ></Route>   */}
+                 <Route exact path="/"  component={Home} ></Route>  
+                 {/* {this.props.children && React.cloneElement(this.props.children, {
+              handleSubClick: this.handleSubClick
+        })}  */}
                 <Route exact path="/sign_in" render={
                     (props)=>(
                         myInfo?(
