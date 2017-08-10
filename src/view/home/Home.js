@@ -17,6 +17,9 @@ export default class Home extends React.Component{
             authors:[],
             more: true
         }
+        console.log('test home props');
+        console.log(this.props);
+         console.log('test home props');
        this.collectionClick = this.collectionClick.bind(this);
        this.getPreviews = this.getPreviews.bind(this);
     }

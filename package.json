@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server.js",
-    "build": "webpack --config webpack.dll.config.js && webpack"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.dll.config.js &&cross-env NODE_ENV=production webpack --define process.env.NODE_ENV='production'"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "clean-webpack-plugin": "^0.1.16",
     "compression-webpack-plugin": "^1.0.0",
     "cookies": "^0.7.0",
+    "cross-env": "^5.0.5",
     "css-loader": "^0.28.4",
     "express": "^4.15.3",
     "extract-text-webpack-plugin": "^2.1.2",

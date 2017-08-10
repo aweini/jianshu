@@ -6,7 +6,7 @@ import Nav from '../nav/Nav';
 import Home from 'home/Home.js';
 import SignIn from 'user/SignIn';
 import SignUp from 'user/SignUp';
-//import MyPage from 'user/MyPage';
+import MyPage from 'user/MyPage';
 import Write from 'write/Write';
 import Article from 'article/Article';
 import Edit from 'edit/Edit';
@@ -18,8 +18,8 @@ import majax from 'common/util/majax'
 //有route的路有页面 this.props里有history location match 等其他属性，其中history里有push函数 location等等
 //location里有 hash pathname search state等信息，state里可以防止要传递的信息
 //几种有history的方式
-// Route component as this.props.location
-// Route render as ({ location }) => ()
+// Route component as this.props.location ,props直接传过去  但只能传递props中的东西（history location match） 其他父亲组件有的方法属性传不过去
+// Route render as ({ location,props }) => ()   必须写props，否组组件里取不到值
 // Route children as ({ location }) => ()
 // withRouter as this.props.location
 //其他页如果有路由页面给传递过去的history就有history属性，如果没传就没有如home，传递的方法可以是单传history如nav或者{...props}如my_page
@@ -203,7 +203,7 @@ export default class Frame extends React.Component{
         return (
             <div ref="frameWapper" className={S.frame_wrapper}>
                 <Nav {...{myInfo,logout,initMyPage,history,getCollection}}/>
-                <Route exact path="/" render={
+                 <Route exact path="/" render={
                     (props)=>(
                         <Home {...{initMyPage}} {...props}></Home>
                     )
@@ -212,7 +212,8 @@ export default class Frame extends React.Component{
                     (props)=>(
                         <Home {...{initMyPage}} {...props}></Home>
                     )
-                }></Route>
+                }></Route>    
+                {/* <Route exact path="/"  component={Home} ></Route>   */}
                 <Route exact path="/sign_in" render={
                     (props)=>(
                         myInfo?(
@@ -236,12 +237,11 @@ export default class Frame extends React.Component{
                         
                     )
                 }></Route>
+                
                 <Route exact path="/my_page" render={
                     (props)=>(
                         <MyPage {...{notebooks, previewsName, myPagePreviews,initMyPage,myInfo,upDateMyInfo}}
-                        {...props}
-                        path={'user/MyPage'} >
-
+                        {...props}>
                         </MyPage>
                     )
                 }>

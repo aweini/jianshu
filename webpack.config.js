@@ -10,6 +10,47 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
 const WebpackChunkHash = require("webpack-chunk-hash");
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const plugins = [];
+plugins.push(
+    new HtmlWebpackPlugin({
+            filename:'../index.html',
+            template: './src/index.html'
+    }),
+    new webpack.ProvidePlugin({
+        $:'jquery',
+        jQuery:'jquery',
+        React: 'react',
+        ReactDOM: 'react-dom',
+        PT: 'prop-types'
+    }),
+    new ExtractTextPlugin("styles.css")
+   
+);
+if(process.env.NODE_ENV === 'production'){
+     new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new webpack.optimize.UglifyJsPlugin({ // js、css都会压缩
+            compress: {
+                warnings: false
+            },
+            output: {
+                comments: false,
+            }
+    }),
+   
+    new webpack.DllReferencePlugin({
+            context: __dirname,
+            manifest: require('./dist/assets/vendors-manifest.json'),
+    })
+}
+if(process.env.NODE_ENV !== 'production'){
+    plugins.push(new webpack.HotModuleReplacementPlugin(),
+        new OpenBrowser({url: `http://localhost:${8080}`})
+    )
+}
+
+
 
 module.exports = {
     entry: {
@@ -22,8 +63,8 @@ module.exports = {
         },
     output: {
         path: path.resolve(__dirname, 'dist/assets'),
-        filename: '[name].[chunkhash].js',
-        chunkFilename: "[name].[chunkhash].js",
+        filename: (process.env.NODE_ENV === 'production')?'[name].[chunkhash].js':'[name].js',
+        chunkFilename: (process.env.NODE_ENV === 'production')?'[name].[chunkhash].js':'[name].js',
         publicPath: '/assets/'
     },
     //对象单数 复数数组
@@ -103,66 +144,70 @@ module.exports = {
             path.resolve(__dirname,'./src/view')
         ]
     },
-    plugins:[
-        // new webpack.HotModuleReplacementPlugin(),
-        new HtmlWebpackPlugin({
-            filename:'../index.html',
-            template: './src/index.html'
-        }),
-        // new webpack.ProvidePlugin({
-        //     $:'jquery',
-        //     jQuery:'jquery',
-        //     React: 'react',
-        //     ReactDOM: 'react-dom',
-        //     PT: 'prop-types'
-        // }),
-       // new OpenBrowser({url: `http://localhost:${8080}`}),
-        // new webpack.DllReferencePlugin({
-        //     context: __dirname,
-        //     manifest: require('./manifest.json'),
-        // })
-        // ,
-        // new webpack.optimize.CommonsChunkPlugin({
-        //         name: ['vendor', 'manifest'], // 指定公共 bundle 的名字。
-        //         minChunks: Infinity,
-        // }),
-        new webpack.optimize.UglifyJsPlugin({ // js、css都会压缩
-            compress: {
-                warnings: false
-            },
-            output: {
-                comments: false,
-            }
-        }),
-        new ExtractTextPlugin("styles.css"),
-        // function() {
-        //     this.plugin("done", function(stats) {
-        //         require("fs").writeFileSync(
-        //         path.join(__dirname, "dist", "stats.json"),
-        //         JSON.stringify(stats.toJson()));
-        //     });
-        // }
-        // new webpack.HashedModuleIdsPlugin(),
-        // new WebpackChunkHash(),
-        // new ChunkManifestPlugin({
-        //     filename: "chunk-manifest.json",
-        //     manifestVariable: "webpackManifest"
-        // }),
+    plugins: plugins,
+    // [
+    //   //new webpack.HotModuleReplacementPlugin(),
+    //     new HtmlWebpackPlugin({
+    //         filename:'../index.html',
+    //         template: './src/index.html'
+    //     }),
+    //     new webpack.ProvidePlugin({
+    //         $:'jquery',
+    //         jQuery:'jquery',
+    //         React: 'react',
+    //         ReactDOM: 'react-dom',
+    //         PT: 'prop-types'
+    //     }),
+    //     new webpack.DefinePlugin({
+    //         'process.env.NODE_ENV': JSON.stringify('production')
+    //     }),
+    //    // new OpenBrowser({url: `http://localhost:${8080}`}),
+    //     // new webpack.DllReferencePlugin({
+    //     //     context: __dirname,
+    //     //     manifest: require('./manifest.json'),
+    //     // })
+    //     // ,
+    //     // new webpack.optimize.CommonsChunkPlugin({
+    //     //         name: ['vendor', 'manifest'], // 指定公共 bundle 的名字。
+    //     //         minChunks: Infinity,
+    //     // }),
+    //     new webpack.optimize.UglifyJsPlugin({ // js、css都会压缩
+    //         compress: {
+    //             warnings: false
+    //         },
+    //         output: {
+    //             comments: false,
+    //         }
+    //     }),
+    //     new ExtractTextPlugin("styles.css"),
+    //     // function() {
+    //     //     this.plugin("done", function(stats) {
+    //     //         require("fs").writeFileSync(
+    //     //         path.join(__dirname, "dist", "stats.json"),
+    //     //         JSON.stringify(stats.toJson()));
+    //     //     });
+    //     // }
+    //     // new webpack.HashedModuleIdsPlugin(),
+    //     // new WebpackChunkHash(),
+    //     // new ChunkManifestPlugin({
+    //     //     filename: "chunk-manifest.json",
+    //     //     manifestVariable: "webpackManifest"
+    //     // }),
       
         
-        // new CompressionWebpackPlugin({ //gzip 压缩
-        //     asset: '[path].gz[query]',
-        //     algorithm: 'gzip',
-        //     test: new RegExp(
-        //         '\\.(js|css)$'    //压缩 js 与 css
-        //     ),
-        //     threshold: 10240,
-        //     minRatio: 0.8
-        // }),
-         new webpack.DllReferencePlugin({
-            context: __dirname,
-            manifest: require('./dist/assets/vendors-manifest.json'),
-        }),
-    ],
+    //     // new CompressionWebpackPlugin({ //gzip 压缩
+    //     //     asset: '[path].gz[query]',
+    //     //     algorithm: 'gzip',
+    //     //     test: new RegExp(
+    //     //         '\\.(js|css)$'    //压缩 js 与 css
+    //     //     ),
+    //     //     threshold: 10240,
+    //     //     minRatio: 0.8
+    //     // }),
+    //     new webpack.DllReferencePlugin({
+    //         context: __dirname,
+    //         manifest: require('./dist/assets/vendors-manifest.json'),
+    //     }),
+    // ],
     devtool: 'cheap-module-eval-source-map'
 };
