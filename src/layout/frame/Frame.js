@@ -204,16 +204,16 @@ export default class Frame extends React.Component{
             <div ref="frameWapper" className={S.frame_wrapper}>
                 <Nav {...{myInfo,logout,initMyPage,history,getCollection}}/>
                  <Route exact path="/" render={
-                    (props)=>(
-                        <Home {...{initMyPage}} {...props}></Home>
-                    )
+                    (props)=>{
+                        return (<Home {...{initMyPage}} {...props}></Home>)
+                    }
                 }></Route>
                 <Route exact path="/index.html" render={
                     (props)=>(
                         <Home {...{initMyPage}} {...props}></Home>
                     )
                 }></Route>    
-                 <Route exact path="/"  component={Home} ></Route>  
+                 {/* <Route exact path="/"  component={Home} ></Route>   */}
                  {/* {this.props.children && React.cloneElement(this.props.children, {
               handleSubClick: this.handleSubClick
         })}  */}
